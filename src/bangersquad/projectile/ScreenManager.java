@@ -1,7 +1,7 @@
 /**
  * 
  */
-package bangersquad.projectile.controller;
+package bangersquad.projectile;
 
 import javafx.scene.layout.StackPane;
 import javafx.animation.KeyFrame;
@@ -17,6 +17,8 @@ import java.io.IOException;
 import javafx.util.Duration;
 import java.util.HashMap;
 
+import bangersquad.projectile.view.ControlledScreen;
+
 /**
  * @author feilan
  *
@@ -24,6 +26,7 @@ import java.util.HashMap;
 public class ScreenManager extends StackPane {
 
 	private HashMap<String, Node> screens = new HashMap<>();
+	private int FADE_DURATION = 250;
 	
 	public void addScreen(String id, Node screen) {
 		screens.put(id, screen);
@@ -62,19 +65,19 @@ public class ScreenManager extends StackPane {
 				
 				Timeline fadeIn = new Timeline(
 					new KeyFrame(Duration.ZERO, new KeyValue(opacity, 0.0)),
-					new KeyFrame(new Duration(500), new KeyValue(opacity, 1.0))
+					new KeyFrame(new Duration(FADE_DURATION), new KeyValue(opacity, 1.0))
 				);
 				fadeIn.play();				
 			} else {
 				Timeline fade = new Timeline(
 					new KeyFrame(Duration.ZERO, new KeyValue(opacity, 1.0)),
-					new KeyFrame(new Duration(500), (ActionEvent e) -> {
+					new KeyFrame(new Duration(FADE_DURATION), (ActionEvent e) -> {
 						getChildren().remove(0);
 						getChildren().add(0, screens.get(id));
 						
 						Timeline fadeIn = new Timeline(
 							new KeyFrame(Duration.ZERO, new KeyValue(opacity, 0.0)),
-							new KeyFrame(new Duration(500), new KeyValue(opacity, 1.0))
+							new KeyFrame(new Duration(FADE_DURATION), new KeyValue(opacity, 1.0))
 						);
 						fadeIn.play();
 					}, new KeyValue(opacity, 0.0))

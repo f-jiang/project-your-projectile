@@ -1,13 +1,12 @@
 package bangersquad.projectile;
 	
-import bangersquad.projectile.controller.ScreenManager;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 
 
-public class Main extends Application {
+public class MainApp extends Application {
 	
 	public static final String MAIN_SCREEN = "main";
 	public static final String INSTRUCTIONS_SCREEN = "instructions";
@@ -15,15 +14,18 @@ public class Main extends Application {
 	public static final String CREDITS_SCREEN = "credits";
 	public static final String GAMEPLAY_SCREEN = "gameplay";
 
-	public static final String MAIN_SCREEN_FXML = "main.fxml";
-	public static final String INSTRUCTIONS_SCREEN_FXML = "instructions.fxml";
-	public static final String SETTINGS_SCREEN_FXML = "settings.fxml";
-	public static final String CREDITS_SCREEN_FXML = "credits.fxml";
-	public static final String GAMEPLAY_SCREEN_FXML = "gameplay.fxml";	
+	public static final String MAIN_SCREEN_FXML = "view/MainScreen.fxml";
+	public static final String INSTRUCTIONS_SCREEN_FXML = "view/InstructionsScreen.fxml";
+	public static final String SETTINGS_SCREEN_FXML = "view/SettingsScreen.fxml";
+	public static final String CREDITS_SCREEN_FXML = "view/CreditsScreen.fxml";
+	public static final String GAMEPLAY_SCREEN_FXML = "view/GameplayScreen.fxml";	
 	
 	@Override
 	public void start(Stage primaryStage) {		
 		ScreenManager root = new ScreenManager(); 
+		root.loadScreen(MAIN_SCREEN, MAIN_SCREEN_FXML);
+		root.loadScreen(INSTRUCTIONS_SCREEN, INSTRUCTIONS_SCREEN_FXML);
+		root.setScreen(MAIN_SCREEN);
 		
 		Scene scene = new Scene(root, 500, 300);
 		

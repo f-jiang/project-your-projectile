@@ -1,7 +1,9 @@
 /**
  * 
  */
-package bangersquad.projectile.controller;
+package bangersquad.projectile.view;
+
+import bangersquad.projectile.ScreenManager;
 
 /**
  * @author feilan
