@@ -23,5 +23,20 @@ public class MainScreenController implements ControlledScreen {
 	private void goToInstructions() {
 		screenManager.setScreen(MainApp.INSTRUCTIONS_SCREEN);
 	}
+
+	@FXML
+	private void goToGameplay() {
+		screenManager.setScreen(MainApp.GAMEPLAY_SCREEN);
+	}
 	
+	@FXML
+	private void goToSettings() {
+		screenManager.setScreen(MainApp.SETTINGS_SCREEN);
+	}
+	
+	@FXML
+	private void goToCredits() {
+		screenManager.setScreen(MainApp.CREDITS_SCREEN);
+	}
+
 }

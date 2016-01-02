@@ -11,7 +11,7 @@ import javafx.fxml.FXML;
  * @author feilan
  *
  */
-public class InstructionsScreenController implements ControlledScreen {
+public class SettingsScreenController implements ControlledScreen {
 
 	private ScreenManager screenManager;
 	

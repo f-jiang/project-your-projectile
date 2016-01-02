@@ -11,7 +11,7 @@ import javafx.fxml.FXML;
  * @author feilan
  *
  */
-public class InstructionsScreenController implements ControlledScreen {
+public class GameplayScreenController implements ControlledScreen {
 
 	private ScreenManager screenManager;
 	
@@ -22,6 +22,6 @@ public class InstructionsScreenController implements ControlledScreen {
 	@FXML
 	private void goToMain() {
 		screenManager.setScreen(MainApp.MAIN_SCREEN);
-	}
+	}	
 	
 }
