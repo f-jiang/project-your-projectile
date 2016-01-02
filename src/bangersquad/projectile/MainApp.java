@@ -4,11 +4,6 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 
-import bangersquad.projectile.model.MathFunction;
-import bangersquad.projectile.model.MathFunctionType;
-
-import java.util.Scanner;
-
 public class MainApp extends Application {
 	
 	public static final String MAIN_SCREEN = "main";
@@ -38,16 +33,7 @@ public class MainApp extends Application {
 	}
 	
 	public static void main(String[] args) {
-//		launch(args);
-		Scanner s = new Scanner(System.in);
-		MathFunction m;
-		
-		while (true) {
-			m = new MathFunction(MathFunctionType.QUADRATIC_STANDARD_FORM);
-			System.out.println(m.getEquation());
-			System.out.println(m.getPartialEquation());
-			s.nextLine();
-		}
+		launch(args);
 	}
 	
 }
