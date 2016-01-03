@@ -3,6 +3,7 @@ package bangersquad.projectile.util.calculator;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import java.util.HashMap;
+import java.util.List;
 import java.util.ArrayList;
 import java.util.ArrayDeque;
 
@@ -129,7 +130,7 @@ public class Calculator {
         variables.clear();
     }    
 
-    public static ArrayList<String> getUndefinedVariables(String exp) {
+    public static List<String> getUndefinedVariables(String exp) {
         ArrayList<String> undefinedVars = new ArrayList<>();
         String var;
         pattern = Pattern.compile(VARIABLE_PATTERN);
