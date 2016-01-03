@@ -24,10 +24,10 @@ public class Calculator {
         Operator.LEFT_PARENTHESIS.value, Operator.RIGHT_PARENTHESIS.value,
         Operator.SUBTRACTION.value);
     
-    public static final String VARIABLE_PATTERN = "(?<!\\p{Alpha})\\p{Alpha}+(?!\\p{Alpha})";
-    public static final String NUMBER_PATTERN = "(?<!\\d)-?(([\\d]+(\\.[\\d]+)?)|(\\.[\\d]+))";
-    public static final String OPERATOR_PATTERN = String.format("[%s]", OPERATORS);
-    public static final double UNDEFINED_VARIABLE_DEFAULT_VALUE = 0.0;
+    private static final String VARIABLE_PATTERN = "(?<!\\p{Alpha})\\p{Alpha}+(?!\\p{Alpha})";
+    private static final String NUMBER_PATTERN = "(?<!\\d)-?(([\\d]+(\\.[\\d]+)?)|(\\.[\\d]+))";
+    private static final String OPERATOR_PATTERN = String.format("[%s]", OPERATORS);
+    private static final double UNDEFINED_VARIABLE_DEFAULT_VALUE = 0.0;
     
     /**
      * 
