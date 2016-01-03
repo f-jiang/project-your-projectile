@@ -24,12 +24,23 @@ public enum Operator {
     public final int numOperands;
     public final String value;
     
+    /**
+     * 
+     * @param val
+     * @param pr
+     * @param numOps
+     */
     Operator(String val, int pr, int numOps) {
         this.precedence = pr;
         this.numOperands = numOps;
         this.value = val;
     }
     
+    /**
+     * 
+     * @param val
+     * @return
+     */
     public static Operator withValue(String val) {
         for (Operator op : Operator.values()) {
             if (op.value.equals(val)) {

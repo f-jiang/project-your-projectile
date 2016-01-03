@@ -28,10 +28,21 @@ public class ScreenManager extends StackPane {
 	private HashMap<String, Node> screens = new HashMap<>();
 	private int FADE_DURATION = 250;
 	
+	/**
+	 * 
+	 * @param id
+	 * @param screen
+	 */
 	public void addScreen(String id, Node screen) {
 		screens.put(id, screen);
 	}
 	
+	/**
+	 * 
+	 * @param id
+	 * @param resource
+	 * @return
+	 */
 	public boolean loadScreen(String id, String resource) {
 		boolean screenLoaded = false;
 		
@@ -53,6 +64,11 @@ public class ScreenManager extends StackPane {
 		return screenLoaded;
 	}
 	
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
 	public boolean setScreen(String id) {
 		boolean screenSet = false;
 		
@@ -91,6 +107,11 @@ public class ScreenManager extends StackPane {
 		return screenSet;
 	}
 	
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
 	public boolean unloadScreen(String id) {
 		// remove() returns null if screen with requested id was not found in screens
 		return screens.remove(id) != null;

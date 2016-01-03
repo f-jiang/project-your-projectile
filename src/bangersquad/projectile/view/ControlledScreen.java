@@ -11,5 +11,9 @@ import bangersquad.projectile.ScreenManager;
  */
 public interface ControlledScreen {
 	
+	/**
+	 * 
+	 * @param controller
+	 */
 	public void setScreenManager(ScreenManager controller);
 }

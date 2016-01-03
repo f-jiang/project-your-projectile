@@ -29,6 +29,12 @@ public class Calculator {
     public static final String OPERATOR_PATTERN = String.format("[%s]", OPERATORS);
     public static final double UNDEFINED_VARIABLE_DEFAULT_VALUE = 0.0;
     
+    /**
+     * 
+     * @param exp
+     * @param isPostfix
+     * @return
+     */
     public static String eval(String exp, boolean isPostfix) {
 //        System.out.println("Expression before plugging in: " + exp);
         exp = plugIn(exp);
@@ -110,11 +116,19 @@ public class Calculator {
         return ans;
     }
     
+    /**
+     * 
+     * @param exp
+     * @return
+     */
     public static String toPostfix(String exp) {
         ArrayDeque<String> expQueue = queueify(exp);
         return Calculator.toPostfix(expQueue).toString();
     }    
     
+    /*
+     * 
+     */
     public static void storeVariable(String name, double value) {
         if (name.matches(VARIABLE_PATTERN)) {
             variables.put(name, value);
@@ -123,14 +137,26 @@ public class Calculator {
         }
     }
     
+    /**
+     * 
+     * @param name
+     */
     public static void deleteVariable(String name) {
         variables.remove(name);
     }
     
+    /**
+     * 
+     */
     public static void deleteAllVariables() {
         variables.clear();
     }    
 
+    /**
+     * 
+     * @param exp
+     * @return
+     */
     public static List<String> getUndefinedVariables(String exp) {
         ArrayList<String> undefinedVars = new ArrayList<>();
         String var;
@@ -147,6 +173,12 @@ public class Calculator {
         return undefinedVars;
     }
 
+    /**
+     * 
+     * @param exp
+     * @param vals
+     * @return
+     */
     public static String plugIn(String exp, double... vals) {
         String var;
         int i = 0;

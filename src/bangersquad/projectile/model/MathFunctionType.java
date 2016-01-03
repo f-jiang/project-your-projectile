@@ -7,10 +7,19 @@ public enum MathFunctionType {
 	
 	private final String baseEquation;	// TODO: prevent this from being modified
 	
+	/**
+	 * 
+	 * @param eq
+	 */
 	MathFunctionType(String eq) {
 		baseEquation = eq;
 	}
 	
+	/**
+	 * 
+	 * @param independentVariable
+	 * @return
+	 */
 	public String getBaseEquation(String independentVariable) {
 		return baseEquation.replaceAll("_", independentVariable); 
 	}

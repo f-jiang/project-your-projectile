@@ -20,7 +20,10 @@ import javafx.scene.text.TextFlow;
 public class FillInTheBlanks extends TextFlow {
 
 	private String[] prompts = new String[0];
-	
+
+	/**
+	 * 
+	 */
 	public FillInTheBlanks() {
 		getChildren().addListener((ListChangeListener.Change<? extends Node> c) -> {
 			while (c.next()) {
@@ -33,11 +36,19 @@ public class FillInTheBlanks extends TextFlow {
 		});
 	}
 
+	/**
+	 * 
+	 * @param prompts
+	 */
 	public void setPrompts(String... prompts) {
 		this.prompts = prompts;
 	}
 	
-	
+	/**
+	 * 
+	 * @param textPieces
+	 * @param blankRegex
+	 */
 	public void update(String[] textPieces, String blankRegex) {
 		TextField blankText;
 		Text nonBlankText;
@@ -60,6 +71,11 @@ public class FillInTheBlanks extends TextFlow {
 		applyPrompts();
 	}
 
+	/**
+	 * 
+	 * @param textPieces
+	 * @param blankRegex
+	 */
 	public void update(List<String> textPieces, String blankRegex) {
 		TextField blankText;
 		Text nonBlankText;
@@ -82,6 +98,11 @@ public class FillInTheBlanks extends TextFlow {
 		applyPrompts();
 	}
 
+	/**
+	 * 
+	 * @param text
+	 * @param blankRegex
+	 */
 	public void update(String text, String blankRegex) {		
 		TextField blankText;
 		Text nonBlankText;
@@ -115,6 +136,10 @@ public class FillInTheBlanks extends TextFlow {
 		applyPrompts();
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public String getText() {
 		StringBuilder sb = new StringBuilder();
 

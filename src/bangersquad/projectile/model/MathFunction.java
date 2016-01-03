@@ -20,7 +20,14 @@ import bangersquad.projectile.util.RandomNumberUtil;
  */
 public class MathFunction {
 	
+	/**
+	 * 
+	 */
 	static public int min = -10;
+	
+	/**
+	 * 
+	 */
 	static public int max = 10;
 	
 	private MathFunctionType type;
@@ -29,6 +36,10 @@ public class MathFunction {
 	private String partialEquation;
 	private String independentVariable = "x";
 	
+	/**
+	 * 
+	 * @param type
+	 */
 	public MathFunction(MathFunctionType type) {
 		this.type = type;
 		equation = partialEquation = type.getBaseEquation(independentVariable);
@@ -41,19 +52,37 @@ public class MathFunction {
 		return type;
 	}
 	
+	/**
+	 * 
+	 * @param format
+	 * @return
+	 */
 	// TODO: return a copy of string
 	public String getEquation(boolean format) {
 		return format ? getFormattedEquation(equation) : equation;
 	}
 	
+	/**
+	 * 
+	 * @param format
+	 * @return
+	 */
 	public String getPartialEquation(boolean format) {
 		return format ? getFormattedEquation(partialEquation) : partialEquation;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public String getIndependentVariable() {
 		return independentVariable;
 	}
 	
+	/**
+	 * 
+	 * @param name
+	 */
 	// TODO: setIndependentVariable()
 	public void setIndependentVariable(String name) {
 		// independentVariable = "x";
@@ -63,6 +92,11 @@ public class MathFunction {
 		// (find out which by getting difference of variables.keySet() and set for blanked-out variables) 
 	}
 	
+	/**
+	 * 
+	 * @param format
+	 * @return
+	 */
 	public List<String> getSplitPartialEquation(boolean format) {
 		String eq = format ? getFormattedEquation(partialEquation) : partialEquation;
 		Pattern p = Pattern.compile("[a-zA-Z]+");
@@ -96,6 +130,11 @@ public class MathFunction {
 		return equationParts;
 	}	
 	
+	/**
+	 * 
+	 * @param name
+	 * @return
+	 */
 	public boolean hasVariable(String name) {
 		return variables.containsKey(name);
 	}
