@@ -4,6 +4,7 @@ import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.ArrayDeque;
 
@@ -42,7 +43,7 @@ public class Calculator {
         String ans = null;
         
         if (!isPostfix) {
-            expQueue = toPostfix(expQueue);
+        	expQueue = toPostfix(expQueue);
         }
 
         while (!expQueue.isEmpty()) {
@@ -149,8 +150,8 @@ public class Calculator {
     public static String plugIn(String exp, double... vals) {
         String var;
         int i = 0;
-        double val;
-
+        double val;        
+        
         pattern = Pattern.compile(VARIABLE_PATTERN);
         matcher = pattern.matcher(exp);
 
@@ -173,10 +174,17 @@ public class Calculator {
         return exp;
     }
 
+    private static String addUnaryMinuses(String exp) {
+    	String regex = String.format("%s\\%s", Operator.SUBTRACTION.value, Operator.LEFT_PARENTHESIS.value);
+    	String replacement = String.format("%s\\%s", Operator.UNARY_MINUS.value, Operator.LEFT_PARENTHESIS.value);
+    	return exp.replaceAll(regex, replacement);
+    }
+    
     private static ArrayDeque<String> queueify(String exp) {
         ArrayDeque<String> expQueue = new ArrayDeque<>();
         String item;
         
+        exp = addUnaryMinuses(exp);
         pattern = Pattern.compile(String.format("%s|%s|%s", VARIABLE_PATTERN, NUMBER_PATTERN, OPERATOR_PATTERN));
         matcher = pattern.matcher(exp);
         
@@ -200,10 +208,10 @@ public class Calculator {
         boolean foundRightParenthesis = false;
 
         while (!exp.isEmpty()) {
-            item = exp.peekFirst();
+            item = exp.peekFirst();	// pop token from infix
 
             if (item.matches(NUMBER_PATTERN) || item.matches(VARIABLE_PATTERN)) {
-                postfixExp.addLast(item);
+                postfixExp.addLast(item);	// push token to postfix
                 exp.removeFirst();
             } else if (item.matches(OPERATOR_PATTERN)) {
                 op = Operator.withValue(item);
@@ -211,24 +219,24 @@ public class Calculator {
 
                 if (ops.isEmpty()) {
                     exp.removeFirst();
-                    ops.addFirst(op);
+                    ops.addFirst(op);	// push token to op stack
                 } else if (foundRightParenthesis) {
-                    topOp = ops.removeFirst();
+                    topOp = ops.removeFirst();	// pop token from op stack
 
                     if (topOp == Operator.LEFT_PARENTHESIS) {
-                        foundRightParenthesis = false;
+                        foundRightParenthesis = false;		// discard token
                     } else {
-                        postfixExp.addLast(topOp.value);
+                        postfixExp.addLast(topOp.value);	// push token to postfix
                     }
                 } else if (op == Operator.RIGHT_PARENTHESIS) {
-                    exp.removeFirst();
+                    exp.removeFirst();	// discard token
                     foundRightParenthesis = true;
                 } else if (topOp.precedence < op.precedence || topOp == Operator.LEFT_PARENTHESIS) {
                     exp.removeFirst();
-                    ops.addFirst(op);
+                    ops.addFirst(op);	// push token to op stack
                 } else if (topOp.precedence >= op.precedence) {
                     ops.removeFirst();
-                    postfixExp.addLast(topOp.value);
+                    postfixExp.addLast(topOp.value);	// push postfix	
                 }
             }
         }
@@ -244,6 +252,68 @@ public class Calculator {
 //        System.out.println("Postfix expression: " + postfixExp.toString());
 
         return postfixExp;
+    }
+    
+    public static void test() {
+        final String EVALUATE_INFIX = "i";
+        final String EVALUATE_POSTFIX = "p";
+        final String STORE_VARIABLE = "v";
+        final String QUIT = "q";
+        
+        Scanner s = new Scanner(System.in);
+        
+        String input = "", name;
+        double value;
+        
+        do {
+            System.out.format("%-20s%-20s%-20s%-20s%n", 
+                "'" + EVALUATE_INFIX + "': eval infix", 
+                "'" + EVALUATE_POSTFIX + "': eval postfix", 
+                "'" + STORE_VARIABLE + "': store var", 
+                "'" + QUIT + "': quit");
+            System.out.print("Pick option: ");
+            
+            try {
+                input = s.nextLine().substring(0, 1);
+                
+                switch (input) {
+                    case EVALUATE_INFIX:
+                        System.out.print("Expression: ");
+                        input = s.nextLine();                        
+                        System.out.println(Calculator.queueify(input));
+                        System.out.println(Calculator.toPostfix(input));
+                        System.out.println(Calculator.eval(input, false));
+
+                        break;
+                    case EVALUATE_POSTFIX:
+                        System.out.print("Expression: ");
+                        input = s.nextLine();
+                        System.out.println(Calculator.eval(input, true));
+
+                        break;
+                    case STORE_VARIABLE:
+                        try {
+                            System.out.print("Name: ");
+                            name = s.nextLine();
+                            System.out.print("Value: ");
+                            value = Double.parseDouble(s.nextLine());
+                            Calculator.storeVariable(name, value);
+                        } catch (NumberFormatException e) {
+                            System.out.println(e.toString());
+                        }
+
+                        break;
+                    default:
+                        break;
+                }                
+            } catch (StringIndexOutOfBoundsException e) {
+                // No action needs to be taken once caught
+            } finally {
+                System.out.print("\n");
+            }
+        } while (!input.equals(QUIT));
+        
+        s.close();
     }
 
 }
