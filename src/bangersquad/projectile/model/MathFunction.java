@@ -4,11 +4,15 @@
 package bangersquad.projectile.model;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.List;
+import java.util.ArrayList;
 
 import bangersquad.projectile.util.RandomNumberUtil;
+
 
 /**
  * @author feilan
@@ -16,12 +20,6 @@ import bangersquad.projectile.util.RandomNumberUtil;
  */
 public class MathFunction {
 	
-	/*
-	 * usage:
-	 * plot the function (ez)
-	 * blank out some random coefficients
-	 * 
-	 */
 	static public int min = -10;
 	static public int max = 10;
 	
@@ -29,15 +27,102 @@ public class MathFunction {
 	private Map<String, Integer> variables = new HashMap<>();
 	private String equation;
 	private String partialEquation;
+	private String independentVariable = "x";
 	
 	public MathFunction(MathFunctionType type) {
 		this.type = type;
-		equation = partialEquation = type.BASE_EQUATION;
+		equation = partialEquation = type.getBaseEquation(independentVariable);
 		
 		generateEquation();
 		generatePartialEquation();
 	}
-
+	
+	public MathFunctionType getType() {
+		return type;
+	}
+	
+	// TODO: return a copy of string
+	public String getEquation(boolean format) {
+		return format ? getFormattedEquation(equation) : equation;
+	}
+	
+	public String getPartialEquation(boolean format) {
+		return format ? getFormattedEquation(partialEquation) : partialEquation;
+	}
+	
+	public String getIndependentVariable() {
+		return independentVariable;
+	}
+	
+	// TODO: setIndependentVariable()
+	public void setIndependentVariable(String name) {
+		// independentVariable = "x";
+		// set equation and partialEquation back to baseEquation
+		// for equation plug in existing values from variables
+		// for partialEquation plug in variables that weren't blanked out 
+		// (find out which by getting difference of variables.keySet() and set for blanked-out variables) 
+	}
+	
+	public List<String> getSplitPartialEquation(boolean format) {
+		String eq = format ? getFormattedEquation(partialEquation) : partialEquation;
+		Pattern p = Pattern.compile("[a-zA-Z]+");
+		Matcher m = p.matcher(eq);
+		List<String> equationParts = new ArrayList<>();
+		int previousStart = 0;
+		int previousEnd = 0;
+		String part, previousPart;
+		
+		while (m.find()) {
+			part = eq.substring(m.start(), m.end());
+			
+			if (variables.containsKey(part)) {
+				previousEnd = m.start();
+				
+				if (previousEnd > 0) {
+					previousPart = eq.substring(previousStart, previousEnd);
+					equationParts.add(previousPart);
+				}
+				
+				equationParts.add(part);
+				
+				previousStart = m.end();
+			}
+		}
+		
+		if (previousStart != eq.length()) {
+			equationParts.add(eq.substring(previousStart, eq.length()));
+		}
+		
+		return equationParts;
+	}	
+	
+	public boolean hasVariable(String name) {
+		return variables.containsKey(name);
+	}
+	
+	private void registerVariable(String name, Integer value) {
+		if (!name.equals(independentVariable) && !variables.containsKey(name)) {
+			variables.put(name, value);
+		}
+	}
+	
+	// TODO: getFormattedEquation
+	private String getFormattedEquation(String equation) {
+		// possible components:
+		// regex
+		// Unicode for superscripts
+		
+		// remove "*"
+		
+		// exponential:
+		// keep "^"
+		
+		// everything else:
+		// convert "^" and raised stuff to unicode superscript
+		
+		return equation;
+	}
+	
 	private String clean(String exp) {
 		exp = exp.replaceAll("\\+\\s*\\-", "- ");	// 3 + -3 ---> 3 - 3
 		exp = exp.replaceAll("\\-\\s*\\-", "+ ");	// 3 - -3 ---> 3 + 3
@@ -60,7 +145,7 @@ public class MathFunction {
 			do {
 				var = RandomNumberUtil.getRandomInt(min, max);
 			} while (var == 0);
-			variables.put("a", var);
+			registerVariable("a", var);
 			if (var == 1) {
 				equation = equation.replaceAll("a\\*", "");
 			} else if (var == -1) {
@@ -72,7 +157,7 @@ public class MathFunction {
 			
 			// s
 			var = RandomNumberUtil.getRandomInt(min, max);
-			variables.put("s", var);
+			registerVariable("s", var);
 			if (var == 0) {
 				equation = equation.replaceAll("\\(x - s\\)", "x");
 			} else {
@@ -83,7 +168,7 @@ public class MathFunction {
 			do {
 				var = RandomNumberUtil.getRandomInt(min, max);
 			} while (var == 0);
-			variables.put("r", var);
+			registerVariable("r", var);
 			equation = equation.replaceAll("r", Integer.toString(variables.get("r")));
 			
 			break;
@@ -92,7 +177,7 @@ public class MathFunction {
 			do {
 				var = RandomNumberUtil.getRandomInt(min, max);
 			} while (var == 0);
-			variables.put("a", var);
+			registerVariable("a", var);
 			if (var == 1) {
 				equation = equation.replaceAll("a\\*", "");
 			} else if (var == -1) {
@@ -103,7 +188,7 @@ public class MathFunction {
 			
 			// b
 			var = RandomNumberUtil.getRandomInt(min, max);
-			variables.put("b", var);
+			registerVariable("b", var);
 			if (var == 0) {
 				equation = equation.replaceAll(" \\+ b\\*x", "");
 			} else if (var == 1) {
@@ -116,7 +201,7 @@ public class MathFunction {
 
 			// c
 			var = RandomNumberUtil.getRandomInt(min, max);
-			variables.put("c", var);
+			registerVariable("c", var);
 			if (var == 0) {
 				equation = equation.replaceAll(" \\+ c", "");
 			} else {
@@ -129,7 +214,7 @@ public class MathFunction {
 			do {
 				var = RandomNumberUtil.getRandomInt(min, max);
 			} while (var == 0);
-			variables.put("a", var);
+			registerVariable("a", var);
 			if (var == 1) {
 				equation = equation.replaceAll("a\\*", "");
 			} else if (var == -1) {
@@ -142,14 +227,14 @@ public class MathFunction {
 			do {
 				var = RandomNumberUtil.getRandomInt(min, max);
 			} while (var == 0);
-			variables.put("h", var);
+			registerVariable("h", var);
 			equation = equation.replaceAll("h", Integer.toString(variables.get("h")));
 
 			// k
 			do {
 				var = RandomNumberUtil.getRandomInt(min, max);
 			} while (var == 0);
-			variables.put("k", var);
+			registerVariable("k", var);
 			equation = equation.replaceAll("k", Integer.toString(variables.get("k")));
 
 			break;
@@ -160,6 +245,7 @@ public class MathFunction {
 		equation = clean(equation);
 	}
 	
+	// TODO: store blanked out variable names into a set
 	private void generatePartialEquation() {
 		// option 1: start from equation var
 		// have a way of distinguishing variables from constants
@@ -178,13 +264,12 @@ public class MathFunction {
 		
 		// FIXME: if last var is a constant equal to 0, it gets plugged if nothing before it has
 		// FIXME: sometimes nothing gets plugged in (don't know why)
-		System.out.println(entries.size());
 		for (Map.Entry<String, Integer> var : entries) {
 			name = var.getKey();
 			value = var.getValue();
 			
 			if ((Math.random() > 0.5 && value != 0 && Math.abs(value) != 1) || (numReplaced == 0 && i == entries.size() - 1)) {
-				partialEquation = partialEquation.replaceAll(var.getKey(), Integer.toString(var.getValue()));
+				partialEquation = partialEquation.replaceAll(name, Integer.toString(value));
 				numReplaced++;
 			}
 			
@@ -192,18 +277,6 @@ public class MathFunction {
 		}
 		
 		partialEquation = clean(partialEquation);
-	}
-	
-	public MathFunctionType getType() {
-		return type;
-	}
-	
-	public String getEquation() {
-		return equation;
-	}
-	
-	public String getPartialEquation() {
-		return partialEquation;
 	}
 	
 }

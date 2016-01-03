@@ -1,17 +1,18 @@
 /**
  * 
  */
-package bangersquad.projectile.view;
+package bangersquad.projectile.view.screens;
 
 import bangersquad.projectile.MainApp;
 import bangersquad.projectile.ScreenManager;
+import bangersquad.projectile.view.ControlledScreen;
 import javafx.fxml.FXML;
 
 /**
  * @author feilan
  *
  */
-public class InstructionsScreenController implements ControlledScreen {
+public class CreditsScreenController implements ControlledScreen {
 
 	private ScreenManager screenManager;
 	

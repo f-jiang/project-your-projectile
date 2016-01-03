@@ -1,10 +1,11 @@
 /**
  * 
  */
-package bangersquad.projectile.view;
+package bangersquad.projectile.view.screens;
 
 import bangersquad.projectile.MainApp;
 import bangersquad.projectile.ScreenManager;
+import bangersquad.projectile.view.ControlledScreen;
 import javafx.fxml.FXML;
 
 /**

@@ -1,17 +1,18 @@
 /**
  * 
  */
-package bangersquad.projectile.view;
+package bangersquad.projectile.view.screens;
 
 import bangersquad.projectile.MainApp;
 import bangersquad.projectile.ScreenManager;
+import bangersquad.projectile.view.ControlledScreen;
 import javafx.fxml.FXML;
 
 /**
  * @author feilan
  *
  */
-public class GameplayScreenController implements ControlledScreen {
+public class InstructionsScreenController implements ControlledScreen {
 
 	private ScreenManager screenManager;
 	
@@ -22,6 +23,6 @@ public class GameplayScreenController implements ControlledScreen {
 	@FXML
 	private void goToMain() {
 		screenManager.setScreen(MainApp.MAIN_SCREEN);
-	}	
+	}
 	
 }

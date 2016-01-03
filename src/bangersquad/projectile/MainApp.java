@@ -12,11 +12,11 @@ public class MainApp extends Application {
 	public static final String CREDITS_SCREEN = "credits";
 	public static final String GAMEPLAY_SCREEN = "gameplay";
 
-	public static final String MAIN_SCREEN_FXML = "view/MainScreen.fxml";
-	public static final String INSTRUCTIONS_SCREEN_FXML = "view/InstructionsScreen.fxml";
-	public static final String SETTINGS_SCREEN_FXML = "view/SettingsScreen.fxml";
-	public static final String CREDITS_SCREEN_FXML = "view/CreditsScreen.fxml";
-	public static final String GAMEPLAY_SCREEN_FXML = "view/GameplayScreen.fxml";	
+	public static final String MAIN_SCREEN_FXML = "view/screens/MainScreen.fxml";
+	public static final String INSTRUCTIONS_SCREEN_FXML = "view/screens/InstructionsScreen.fxml";
+	public static final String SETTINGS_SCREEN_FXML = "view/screens/SettingsScreen.fxml";
+	public static final String CREDITS_SCREEN_FXML = "view/screens/CreditsScreen.fxml";
+	public static final String GAMEPLAY_SCREEN_FXML = "view/screens/GameplayScreen.fxml";	
 	
 	@Override
 	public void start(Stage primaryStage) {		
