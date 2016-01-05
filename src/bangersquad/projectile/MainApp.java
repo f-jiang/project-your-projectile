@@ -23,7 +23,11 @@ public class MainApp extends Application {
 		ScreenManager root = new ScreenManager(); 
 		root.loadScreen(MAIN_SCREEN, MAIN_SCREEN_FXML);
 		root.loadScreen(INSTRUCTIONS_SCREEN, INSTRUCTIONS_SCREEN_FXML);
-		root.setScreen(MAIN_SCREEN);
+		root.loadScreen(SETTINGS_SCREEN, SETTINGS_SCREEN_FXML);
+		root.loadScreen(CREDITS_SCREEN, CREDITS_SCREEN_FXML);
+		root.loadScreen(GAMEPLAY_SCREEN, GAMEPLAY_SCREEN_FXML);
+//		root.setScreen(MAIN_SCREEN);
+		root.setScreen(GAMEPLAY_SCREEN);
 		
 		Scene scene = new Scene(root, 500, 300);
 		
