@@ -6,8 +6,6 @@ package bangersquad.projectile.view.screens;
 import bangersquad.projectile.MainApp;
 import bangersquad.projectile.ScreenManager;
 import bangersquad.projectile.model.MathFunction;
-import bangersquad.projectile.model.MathFunctionType;
-import bangersquad.projectile.util.RandomNumberUtil;
 import bangersquad.projectile.util.calculator.Calculator;
 import bangersquad.projectile.view.ControlledScreen;
 import javafx.collections.ObservableList;
@@ -29,8 +27,6 @@ public class GameplayScreenController implements ControlledScreen {
 	private LineChart<Double, Double> lineChart;
 	private XYChart.Series<Double, Double> target;
 	
-	private MathFunction currentFunction;	// test
-	
 	public void setScreenManager(ScreenManager manager) {
 		screenManager = manager;
 	}
@@ -45,21 +41,6 @@ public class GameplayScreenController implements ControlledScreen {
 		lineChart.getXAxis().setAutoRanging(true);
 		lineChart.getYAxis().setAutoRanging(true);
 		lineChart.setCreateSymbols(false);
-	}
-	
-	@FXML
-	private void draw() {	// temporary test function
-		double targetX = RandomNumberUtil.getRandomInt(-10, 10);
-		double targetY = RandomNumberUtil.getRandomInt(-10, 10);
-		double targetSize = RandomNumberUtil.getRandomInt(-10, 10);
-		
-		positionTarget(targetX, targetY, targetSize, Math.random() > 0.5 ? TargetOrientation.HORIZONTAL : TargetOrientation.VERTICAL);
-
-		if (currentFunction != null) {
-			removeFunction(currentFunction);
-		}
-		currentFunction = new MathFunction(MathFunctionType.QUADRATIC_VERTEX_FORM);
-		plotFunction(currentFunction, -10.0, 10.0);
 	}
 	
 	private void plotFunction(MathFunction function, Double startX, Double endX) {	// TODO: add a left to right animation for this
