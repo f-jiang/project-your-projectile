@@ -1,5 +1,6 @@
 package bangersquad.projectile;
 	
+import bangersquad.projectile.util.calculator.Calculator;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
@@ -38,6 +39,7 @@ public class MainApp extends Application {
 	
 	public static void main(String[] args) {
 		launch(args);
+//		Calculator.test();
 	}
 	
 }

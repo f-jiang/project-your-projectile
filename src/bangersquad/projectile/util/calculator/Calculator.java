@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.math.BigDecimal;
 import java.util.ArrayDeque;
 
 /**
@@ -182,7 +183,7 @@ public class Calculator {
     public static String plugIn(String exp, double... vals) {
         String var;
         int i = 0;
-        double val;        
+        double val;
         
         pattern = Pattern.compile(VARIABLE_PATTERN);
         matcher = pattern.matcher(exp);
@@ -199,7 +200,7 @@ public class Calculator {
                     val = UNDEFINED_VARIABLE_DEFAULT_VALUE;
             }
 
-            exp = exp.replaceAll(var, String.valueOf(val));
+            exp = exp.replaceAll(var, BigDecimal.valueOf(val).toPlainString());
             matcher.reset(exp);
         }
 
