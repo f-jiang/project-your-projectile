@@ -3,6 +3,8 @@
  */
 package bangersquad.projectile.view.screens;
 
+import java.util.Arrays;
+
 import bangersquad.projectile.MainApp;
 import bangersquad.projectile.ScreenManager;
 import bangersquad.projectile.model.MathFunction;
@@ -10,6 +12,7 @@ import bangersquad.projectile.model.MathFunctionType;
 import bangersquad.projectile.util.RandomNumberUtil;
 import bangersquad.projectile.util.calculator.Calculator;
 import bangersquad.projectile.view.ControlledScreen;
+import bangersquad.projectile.view.fillintheblanks.FillInTheBlanks;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
@@ -24,12 +27,14 @@ public class GameplayScreenController implements ControlledScreen {
 	private enum TargetOrientation { VERTICAL, HORIZONTAL }
 	
 	private ScreenManager screenManager;
+	private XYChart.Series<Double, Double> target;
+	private MathFunction currentFunction;	// test
 	
 	@FXML 
 	private LineChart<Double, Double> lineChart;
-	private XYChart.Series<Double, Double> target;
 	
-	private MathFunction currentFunction;	// test
+	@FXML
+	private FillInTheBlanks userInput;
 	
 	public void setScreenManager(ScreenManager manager) {
 		screenManager = manager;
@@ -58,8 +63,11 @@ public class GameplayScreenController implements ControlledScreen {
 		if (currentFunction != null) {
 			removeFunction(currentFunction);
 		}
-		currentFunction = new MathFunction(MathFunctionType.QUADRATIC_VERTEX_FORM);
+		currentFunction = new MathFunction(MathFunctionType.QUADRATIC_STANDARD_FORM);
 		plotFunction(currentFunction, -10.0, 10.0);
+		
+		userInput.update(currentFunction.getSplitPartialEquation(false, true), "_");
+		userInput.setPrompts(currentFunction.getMissingVariables());
 	}
 	
 	private void plotFunction(MathFunction function, Double startX, Double endX) {	// TODO: add a left to right animation for this
@@ -70,8 +78,9 @@ public class GameplayScreenController implements ControlledScreen {
 		points.setName(equation);
 		
 		for (Double x = startX; x < endX; x += 0.1) {
-			System.out.println(Calculator.plugIn(equation, x));	// TODO: use bigdecimal instead for the calculator
+//			System.out.println(Calculator.plugIn(equation, x));	// TODO: use bigdecimal instead for the calculator
 			y = Double.valueOf(Calculator.eval(Calculator.plugIn(equation, x), false));
+			System.out.println(y);
 			points.getData().add(new XYChart.Data<>(x, y));
 		}
 		

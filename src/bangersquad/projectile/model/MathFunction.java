@@ -23,18 +23,20 @@ public class MathFunction {
 	/**
 	 * 
 	 */
-	static public int min = -10;
+	public static int min = -10;
 	
 	/**
 	 * 
 	 */
-	static public int max = 10;
+	public static int max = 10;
 	
 	private MathFunctionType type;
 	private Map<String, Integer> variables = new HashMap<>();
+	private List<String> missingVariables = new ArrayList<>();
 	private String equation;
 	private String partialEquation;
 	private String independentVariable = "x";
+	private String blankValue = "_";
 	
 	/**
 	 * 
@@ -59,7 +61,7 @@ public class MathFunction {
 	 */
 	// TODO: return a copy of string
 	public String getEquation(boolean format) {
-		return format ? getFormattedEquation(equation) : equation;
+		return format ? formatEquation(equation) : equation;
 	}
 	
 	/**
@@ -67,8 +69,18 @@ public class MathFunction {
 	 * @param format
 	 * @return
 	 */
-	public String getPartialEquation(boolean format) {
-		return format ? getFormattedEquation(partialEquation) : partialEquation;
+	public String getPartialEquation(boolean format, boolean blankOut) {
+		String equation = partialEquation;
+		
+		if (format) {
+			equation = formatEquation(equation);
+		}
+		
+		if (blankOut) {
+			equation = blankOut(equation);
+		}
+		
+		return equation;
 	}
 	
 	/**
@@ -77,6 +89,10 @@ public class MathFunction {
 	 */
 	public String getIndependentVariable() {
 		return independentVariable;
+	}
+	
+	public String[] getMissingVariables() {
+		return missingVariables.toArray(new String[0]);
 	}
 	
 	/**
@@ -97,8 +113,8 @@ public class MathFunction {
 	 * @param format
 	 * @return
 	 */
-	public List<String> getSplitPartialEquation(boolean format) {
-		String eq = format ? getFormattedEquation(partialEquation) : partialEquation;
+	public List<String> getSplitPartialEquation(boolean format, boolean blankOut) {
+		String eq = format ? formatEquation(partialEquation) : partialEquation;
 		Pattern p = Pattern.compile("[a-zA-Z]+");
 		Matcher m = p.matcher(eq);
 		List<String> equationParts = new ArrayList<>();
@@ -109,7 +125,7 @@ public class MathFunction {
 		while (m.find()) {
 			part = eq.substring(m.start(), m.end());
 			
-			if (variables.containsKey(part)) {
+			if (hasVariable(part)) {
 				previousEnd = m.start();
 				
 				if (previousEnd > 0) {
@@ -117,7 +133,7 @@ public class MathFunction {
 					equationParts.add(previousPart);
 				}
 				
-				equationParts.add(part);
+				equationParts.add(blankOut ? blankOut(part) : part);
 				
 				previousStart = m.end();
 			}
@@ -140,13 +156,13 @@ public class MathFunction {
 	}
 	
 	private void registerVariable(String name, Integer value) {
-		if (!name.equals(independentVariable) && !variables.containsKey(name)) {
+		if (!name.equals(independentVariable) && !hasVariable(name)) {
 			variables.put(name, value);
 		}
 	}
 	
 	// TODO: getFormattedEquation
-	private String getFormattedEquation(String equation) {
+	private String formatEquation(String equation) {
 		// possible components:
 		// regex
 		// Unicode for superscripts
@@ -166,6 +182,20 @@ public class MathFunction {
 		exp = exp.replaceAll("\\+\\s*\\-", "- ");	// 3 + -3 ---> 3 - 3
 		exp = exp.replaceAll("\\-\\s*\\-", "+ ");	// 3 - -3 ---> 3 + 3
 		return exp;
+	}
+	
+	private String blankOut(String exp) {
+		StringBuilder regex = new StringBuilder();
+		
+		for (int i = 0, j = missingVariables.size(); i < j; i++) {
+			regex.append(missingVariables.get(i));
+			
+			if (i < j - 1) {
+				regex.append('|');
+			}
+		}
+		
+		return exp.replaceAll(regex.toString(), blankValue);
 	}
 	
 	private void generateEquation() {
@@ -301,6 +331,8 @@ public class MathFunction {
 		int numReplaced = 0;
 		int i = 0;
 		
+		missingVariables.clear();
+		
 		// FIXME: if last var is a constant equal to 0, it gets plugged if nothing before it has
 		// FIXME: sometimes nothing gets plugged in (don't know why)
 		for (Map.Entry<String, Integer> var : entries) {
@@ -308,8 +340,10 @@ public class MathFunction {
 			value = var.getValue();
 			
 			if ((Math.random() > 0.5 && value != 0 && Math.abs(value) != 1) || (numReplaced == 0 && i == entries.size() - 1)) {
-				partialEquation = partialEquation.replaceAll(name, Integer.toString(value));
+				partialEquation = partialEquation.replaceAll(name, Integer.toString(value));				
 				numReplaced++;
+			} else {
+				missingVariables.add(name);
 			}
 			
 			i++;
