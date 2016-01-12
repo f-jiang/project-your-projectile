@@ -17,6 +17,6 @@
           <NumberAxis side="LEFT" />
         </yAxis>
       </LineChart>
-      <Button layoutX="163.0" layoutY="250.0" mnemonicParsing="false" onAction="#draw" text="Button" />
+      <Button layoutX="163.0" layoutY="250.0" mnemonicParsing="false" text="Button" />
    </children>
 </AnchorPane>

@@ -5,6 +5,6 @@
 <?import javafx.scene.layout.AnchorPane?>
 
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.40" fx:controller="bangersquad.projectile.view.SettingsScreenController">
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.40" fx:controller="bangersquad.projectile.view.screens.SettingsScreenController">
 	<!-- TODO Add Nodes -->
 </AnchorPane>
