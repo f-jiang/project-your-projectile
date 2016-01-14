@@ -4,6 +4,7 @@
 package bangersquad.projectile.model;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -44,10 +45,12 @@ public class MathFunction {
 	 */
 	public MathFunction(MathFunctionType type) {
 		this.type = type;
-		equation = partialEquation = type.getBaseEquation(independentVariable);
 		
-		generateEquation();
-		generatePartialEquation();
+		generateVariables();
+		determineMissingVariables();
+		
+		updateEquation();
+		updatePartialEquation();
 	}
 	
 	public MathFunctionType getType() {
@@ -105,7 +108,10 @@ public class MathFunction {
 		// set equation and partialEquation back to baseEquation
 		// for equation plug in existing values from variables
 		// for partialEquation plug in variables that weren't blanked out 
-		// (find out which by getting difference of variables.keySet() and set for blanked-out variables) 
+		// (find out which by getting difference of variables.keySet() and set for blanked-out variables)
+		
+		updateEquation();
+		updatePartialEquation();
 	}
 	
 	/**
@@ -198,15 +204,11 @@ public class MathFunction {
 		return exp.replaceAll(regex.toString(), blankValue);
 	}
 	
-	private void generateEquation() {
+	private void generateVariables() {
 		int var;
 		
-		// TODO: break into clear steps:
-		//		 -determining variable values
-		//       -plugging in the values
-		// TODO: create variables to represent the coefficients, maybe inside MathFunctionType
-		// TODO: to reduce repetitive code, see if a common behaviour can be defined for plugging in different types of variables
-		// TODO: prevent x from being stored in variables map
+		variables.clear();
+		
 		switch (this.type) {
 		case QUADRATIC_FACTORED_FORM:	// f(x) = a(x - s)(x - r)
 			// TODO: add coefficients for x
@@ -215,30 +217,16 @@ public class MathFunction {
 				var = RandomNumberUtil.getRandomInt(min, max);
 			} while (var == 0);
 			registerVariable("a", var);
-			if (var == 1) {
-				equation = equation.replaceAll("a\\*", "");
-			} else if (var == -1) {
-				equation = equation.replaceAll("a\\*", "-");
-			} else {
-				equation = equation.replaceAll("a", Integer.toString(variables.get("a")));
-			}
-			
 			
 			// s
 			var = RandomNumberUtil.getRandomInt(min, max);
 			registerVariable("s", var);
-			if (var == 0) {
-				equation = equation.replaceAll("\\(x - s\\)", "x");
-			} else {
-				equation = equation.replaceAll("s", Integer.toString(variables.get("s")));
-			}			
 
 			// r
 			do {
 				var = RandomNumberUtil.getRandomInt(min, max);
 			} while (var == 0);
 			registerVariable("r", var);
-			equation = equation.replaceAll("r", Integer.toString(variables.get("r")));
 			
 			break;
 		case QUADRATIC_STANDARD_FORM:	// f(x) = ax^2 + bx + c
@@ -247,35 +235,14 @@ public class MathFunction {
 				var = RandomNumberUtil.getRandomInt(min, max);
 			} while (var == 0);
 			registerVariable("a", var);
-			if (var == 1) {
-				equation = equation.replaceAll("a\\*", "");
-			} else if (var == -1) {
-				equation = equation.replaceAll("a\\*", "-");
-			} else {
-				equation = equation.replaceAll("a", Integer.toString(variables.get("a")));
-			}
 			
 			// b
 			var = RandomNumberUtil.getRandomInt(min, max);
 			registerVariable("b", var);
-			if (var == 0) {
-				equation = equation.replaceAll(" \\+ b\\*x", "");
-			} else if (var == 1) {
-				equation = equation.replaceAll("b\\*", "");
-			} else if (var == -1) {
-				equation = equation.replaceAll("b\\*", "-");
-			} else {
-				equation = equation.replaceAll("b", Integer.toString(variables.get("b")));
-			}			
 
 			// c
 			var = RandomNumberUtil.getRandomInt(min, max);
 			registerVariable("c", var);
-			if (var == 0) {
-				equation = equation.replaceAll(" \\+ c", "");
-			} else {
-				equation = equation.replaceAll("c", Integer.toString(variables.get("c")));
-			}
 			
 			break;
 		case QUADRATIC_VERTEX_FORM:		// f(x) = a(x - h)^2 + k
@@ -284,27 +251,109 @@ public class MathFunction {
 				var = RandomNumberUtil.getRandomInt(min, max);
 			} while (var == 0);
 			registerVariable("a", var);
-			if (var == 1) {
-				equation = equation.replaceAll("a\\*", "");
-			} else if (var == -1) {
-				equation = equation.replaceAll("a\\*", "-");
-			} else {
-				equation = equation.replaceAll("a", Integer.toString(variables.get("a")));
-			}
 
 			// h
 			do {
 				var = RandomNumberUtil.getRandomInt(min, max);
 			} while (var == 0);
 			registerVariable("h", var);
-			equation = equation.replaceAll("h", Integer.toString(variables.get("h")));
 
 			// k
 			do {
 				var = RandomNumberUtil.getRandomInt(min, max);
 			} while (var == 0);
 			registerVariable("k", var);
-			equation = equation.replaceAll("k", Integer.toString(variables.get("k")));
+
+			break;
+		default:
+			break;
+		}				
+	}
+	
+	private void updateEquation() {
+		int var;
+		
+		equation = type.getBaseEquation(independentVariable);
+		
+		// TODO: create variables to represent the coefficients, maybe inside MathFunctionType
+		// TODO: to reduce repetitive code, see if a common behaviour can be defined for plugging in different types of variables
+		switch (this.type) {
+		case QUADRATIC_FACTORED_FORM:	// f(x) = a(x - s)(x - r)
+			// TODO: add coefficients for x
+			// a
+			var = variables.get("a");
+			if (var == 1) {
+				equation = equation.replaceAll("a\\*", "");
+			} else if (var == -1) {
+				equation = equation.replaceAll("a\\*", "-");
+			} else {
+				equation = equation.replaceAll("a", Integer.toString(var));
+			}
+			
+			
+			// s
+			var = variables.get("s");
+			if (var == 0) {
+				equation = equation.replaceAll("\\(x - s\\)", "x");
+			} else {
+				equation = equation.replaceAll("s", Integer.toString(var));
+			}			
+
+			// r
+			var = variables.get("r");
+			equation = equation.replaceAll("r", Integer.toString(var));
+			
+			break;
+		case QUADRATIC_STANDARD_FORM:	// f(x) = ax^2 + bx + c
+			// a
+			var = variables.get("a");
+			if (var == 1) {
+				equation = equation.replaceAll("a\\*", "");
+			} else if (var == -1) {
+				equation = equation.replaceAll("a\\*", "-");
+			} else {
+				equation = equation.replaceAll("a", Integer.toString(var));
+			}
+			
+			// b
+			var = variables.get("b");
+			if (var == 0) {
+				equation = equation.replaceAll(" \\+ b\\*x", "");
+			} else if (var == 1) {
+				equation = equation.replaceAll("b\\*", "");
+			} else if (var == -1) {
+				equation = equation.replaceAll("b\\*", "-");
+			} else {
+				equation = equation.replaceAll("b", Integer.toString(var));
+			}			
+
+			// c
+			var = variables.get("c");
+			if (var == 0) {
+				equation = equation.replaceAll(" \\+ c", "");
+			} else {
+				equation = equation.replaceAll("c", Integer.toString(var));
+			}
+			
+			break;
+		case QUADRATIC_VERTEX_FORM:		// f(x) = a(x - h)^2 + k
+			// a
+			var = variables.get("a");
+			if (var == 1) {
+				equation = equation.replaceAll("a\\*", "");
+			} else if (var == -1) {
+				equation = equation.replaceAll("a\\*", "-");
+			} else {
+				equation = equation.replaceAll("a", Integer.toString(var));
+			}
+
+			// h
+			var = variables.get("h");
+			equation = equation.replaceAll("h", Integer.toString(var));
+
+			// k
+			var = variables.get("k");
+			equation = equation.replaceAll("k", Integer.toString(var));
 
 			break;
 		default:
@@ -314,8 +363,25 @@ public class MathFunction {
 		equation = clean(equation);
 	}
 	
+	private void updatePartialEquation() {
+		HashSet<String> intactVariables = new HashSet<>(variables.keySet());
+		Integer val;
+		
+		intactVariables.removeAll(missingVariables);
+		
+		partialEquation = type.getBaseEquation(independentVariable);		
+		
+		// plug in
+		for (String var : intactVariables) {
+			val = variables.get(var);
+			partialEquation = partialEquation.replaceAll(var, Integer.toString(val));
+		}
+		
+		partialEquation = clean(partialEquation);		
+	}
+	
 	// TODO: store blanked out variable names into a set
-	private void generatePartialEquation() {
+	private void determineMissingVariables() {
 		// option 1: start from equation var
 		// have a way of distinguishing variables from constants
 		// remove some of the variables
@@ -325,7 +391,7 @@ public class MathFunction {
 		// plug in all existing coefficients (so that even ones and zeros show)
 		// remove some ones and zeros
 		// remove some of the remaining variables
-		Set<Map.Entry<String, Integer>> entries = variables.entrySet();		
+		Set<Map.Entry<String, Integer>> entries = variables.entrySet();
 		String name;
 		Integer value;
 		int numReplaced = 0;
@@ -339,17 +405,12 @@ public class MathFunction {
 			name = var.getKey();
 			value = var.getValue();
 			
-			if ((Math.random() > 0.5 && value != 0 && Math.abs(value) != 1) || (numReplaced == 0 && i == entries.size() - 1)) {
-				partialEquation = partialEquation.replaceAll(name, Integer.toString(value));				
-				numReplaced++;
-			} else {
+			if (!((Math.random() > 0.5 && value != 0 && Math.abs(value) != 1) || (numReplaced == 0 && i == entries.size() - 1))) {
 				missingVariables.add(name);
 			}
 			
 			i++;
 		}
-		
-		partialEquation = clean(partialEquation);
 	}
 	
 }

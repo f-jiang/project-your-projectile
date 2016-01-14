@@ -3,7 +3,7 @@
  */
 package bangersquad.projectile.view.screens;
 
-import java.util.Arrays;
+import java.util.List;
 
 import bangersquad.projectile.MainApp;
 import bangersquad.projectile.ScreenManager;
@@ -17,6 +17,9 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.chart.NumberAxis;
 
 /**
  * @author feilan
@@ -30,8 +33,15 @@ public class GameplayScreenController implements ControlledScreen {
 	private XYChart.Series<Double, Double> target;
 	private MathFunction currentFunction;	// test
 	
-	@FXML 
-	private LineChart<Double, Double> lineChart;
+	private LineChart<Double, Double> chart;
+	private NumberAxis xAxis;
+	private NumberAxis yAxis;
+	
+	@FXML
+	private AnchorPane lineChartPane;
+	
+	@FXML
+	private BorderPane borderPane;
 	
 	@FXML
 	private FillInTheBlanks userInput;
@@ -45,11 +55,23 @@ public class GameplayScreenController implements ControlledScreen {
 		screenManager.setScreen(MainApp.MAIN_SCREEN);
 	}	
 	
+	@SuppressWarnings("unchecked")
 	@FXML
 	private void initialize() {	// TODO: add styling to the graph
-		lineChart.getXAxis().setAutoRanging(true);
-		lineChart.getYAxis().setAutoRanging(true);
-		lineChart.setCreateSymbols(false);
+		xAxis = new NumberAxis("x", -10, 10, 1);
+		xAxis.setAutoRanging(false);
+		xAxis.setAnimated(true);
+		
+		yAxis = new NumberAxis("f(x)", -10, 10, 1);
+		yAxis.setAutoRanging(false);
+		yAxis.setAnimated(true);
+		
+		chart = new LineChart(xAxis, yAxis);
+		chart.setCreateSymbols(false);
+		chart.setAnimated(true);
+		chart.setLegendVisible(false);
+		
+		borderPane.setCenter(chart);
 	}
 	
 	@FXML
@@ -64,7 +86,7 @@ public class GameplayScreenController implements ControlledScreen {
 			removeFunction(currentFunction);
 		}
 		currentFunction = new MathFunction(MathFunctionType.QUADRATIC_STANDARD_FORM);
-		plotFunction(currentFunction, -10.0, 10.0);
+		plotFunction(currentFunction, -5.0, 10.0);
 		
 		userInput.update(currentFunction.getSplitPartialEquation(false, true), "_");
 		userInput.setPrompts(currentFunction.getMissingVariables());
@@ -77,31 +99,30 @@ public class GameplayScreenController implements ControlledScreen {
 		
 		points.setName(equation);
 		
-		for (Double x = startX; x < endX; x += 0.1) {
+		for (Double x = startX; x < endX; x += 0.01) {
 //			System.out.println(Calculator.plugIn(equation, x));	// TODO: use bigdecimal instead for the calculator
 			y = Double.valueOf(Calculator.eval(Calculator.plugIn(equation, x), false));
-			System.out.println(y);
 			points.getData().add(new XYChart.Data<>(x, y));
 		}
 		
-		lineChart.getData().add(points);
+		chart.getData().add(points);
 	}
 	
 	private void removeFunction(MathFunction function) {		
-		for (XYChart.Series<Double, Double> item : lineChart.getData()) {
+		for (XYChart.Series<Double, Double> item : chart.getData()) {
 			if (item.getName().equals(function.getEquation(false))) {
-				lineChart.getData().remove(item);
+				chart.getData().remove(item);
 				break;
 			}
 		}
 	}
 	
-	private void clearGraph() {
-		lineChart.getData().clear();
+	private void clearChart() {
+		chart.getData().clear();
 	}
 	
 	private void positionTarget(Double x, Double y, Double size, TargetOrientation orientation) {
-		ObservableList<XYChart.Series<Double, Double>> items = lineChart.getData();
+		ObservableList<XYChart.Series<Double, Double>> items = chart.getData();
 		
 		if (items.contains(target)) {
 			items.remove(target);
@@ -124,6 +145,16 @@ public class GameplayScreenController implements ControlledScreen {
 		}
 		
 		items.add(target);
+	}
+	
+	private void setXBounds(double lower, double upper) {
+		xAxis.setLowerBound(lower);
+		xAxis.setUpperBound(upper);
+	}
+
+	private void setYBounds(double lower, double upper) {
+		yAxis.setLowerBound(lower);
+		yAxis.setUpperBound(upper);
 	}
 	
 }
