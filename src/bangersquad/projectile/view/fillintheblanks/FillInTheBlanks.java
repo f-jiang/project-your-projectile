@@ -23,13 +23,16 @@ import javafx.scene.text.TextFlow;
  */
 public class FillInTheBlanks extends AnchorPane {	// TODO: make fill in the blanks work as scene builder "class"
 
+	private static final String FXML_LOCATION = "FillInTheBlanks.fxml";
+	private static final String CSS_LOCATION = "FillInTheBlanks.css";
+	
 	@FXML
 	private TextFlow textFlow;
 	
 	private String[] prompts = new String[0];
 
 	public FillInTheBlanks() {
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("FillInTheBlanks.fxml"));
+		FXMLLoader loader = new FXMLLoader(getClass().getResource(FXML_LOCATION));
 		
 		loader.setRoot(this);
 		loader.setController(this);
@@ -40,6 +43,8 @@ public class FillInTheBlanks extends AnchorPane {	// TODO: make fill in the blan
             throw new RuntimeException(exception);
         }
 		
+        getStylesheets().add(getClass().getResource(CSS_LOCATION).toExternalForm());
+        
 /*		getChildren().addListener((ListChangeListener.Change<? extends Node> c) -> {
 			while (c.next()) {
 				for (Node added : c.getAddedSubList()) {
