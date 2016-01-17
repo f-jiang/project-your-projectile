@@ -18,7 +18,7 @@ public class RandomNumberUtil {
 	 * @return
 	 */
 	static public int getRandomInt(int min, int max) {
-		Random r = new Random();	// TODO: why create a new one every time?
+		Random r = new Random();
 		return r.nextInt(max - min + 1) + min;
 	}
 }
