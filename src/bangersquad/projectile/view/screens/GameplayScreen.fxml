@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.effect.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.chart.*?>
@@ -13,10 +14,10 @@
    <children>
       <BorderPane fx:id="borderPane" prefHeight="300.0" prefWidth="500.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <bottom>
-            <HBox prefHeight="26.0" prefWidth="498.0" BorderPane.alignment="CENTER">
+            <HBox prefHeight="26.0" prefWidth="498.0" spacing="20.0" BorderPane.alignment="CENTER">
                <children>
-                  <Button mnemonicParsing="false" onAction="#draw" text="Button" HBox.hgrow="ALWAYS" />
-                  <FillInTheBlanks fx:id="userInput" />
+                  <Button mnemonicParsing="false" onAction="#draw" prefHeight="26.0" prefWidth="224.0" text="Button" HBox.hgrow="ALWAYS" />
+                  <FillInTheBlanks fx:id="userInput" prefHeight="26.0" prefWidth="322.0" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
          </bottom>

@@ -62,7 +62,6 @@ public class MathFunction {
 	 * @param format
 	 * @return
 	 */
-	// TODO: return a copy of string
 	public String getEquation(boolean format) {
 		return format ? formatEquation(equation) : equation;
 	}
@@ -102,14 +101,7 @@ public class MathFunction {
 	 * 
 	 * @param name
 	 */
-	// TODO: setIndependentVariable()
 	public void setIndependentVariable(String name) {
-		// independentVariable = "x";
-		// set equation and partialEquation back to baseEquation
-		// for equation plug in existing values from variables
-		// for partialEquation plug in variables that weren't blanked out 
-		// (find out which by getting difference of variables.keySet() and set for blanked-out variables)
-		
 		updateEquation();
 		updatePartialEquation();
 	}
@@ -380,7 +372,6 @@ public class MathFunction {
 		partialEquation = clean(partialEquation);		
 	}
 	
-	// TODO: store blanked out variable names into a set
 	private void determineMissingVariables() {
 		// option 1: start from equation var
 		// have a way of distinguishing variables from constants

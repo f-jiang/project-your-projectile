@@ -1,6 +1,5 @@
 package bangersquad.projectile;
 	
-import bangersquad.projectile.util.calculator.Calculator;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
@@ -27,8 +26,7 @@ public class MainApp extends Application {
 		root.loadScreen(SETTINGS_SCREEN, SETTINGS_SCREEN_FXML);
 		root.loadScreen(CREDITS_SCREEN, CREDITS_SCREEN_FXML);
 		root.loadScreen(GAMEPLAY_SCREEN, GAMEPLAY_SCREEN_FXML);
-//		root.setScreen(MAIN_SCREEN);
-		root.setScreen(GAMEPLAY_SCREEN);
+		root.setScreen(MAIN_SCREEN);
 		
 		Scene scene = new Scene(root, 500, 300);
 		
@@ -39,7 +37,6 @@ public class MainApp extends Application {
 	
 	public static void main(String[] args) {
 		launch(args);
-//		Calculator.test();
 	}
 	
 }

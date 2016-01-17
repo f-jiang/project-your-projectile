@@ -7,7 +7,6 @@ import java.util.List;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,10 +20,9 @@ import javafx.scene.text.TextFlow;
  * @author feilan
  *
  */
-public class FillInTheBlanks extends AnchorPane {	// TODO: make fill in the blanks work as scene builder "class"
+public class FillInTheBlanks extends AnchorPane {
 
 	private static final String FXML_LOCATION = "FillInTheBlanks.fxml";
-	private static final String CSS_LOCATION = "FillInTheBlanks.css";
 	
 	@FXML
 	private TextFlow textFlow;
@@ -42,20 +40,8 @@ public class FillInTheBlanks extends AnchorPane {	// TODO: make fill in the blan
         } catch (IOException exception) {
             throw new RuntimeException(exception);
         }
-		
-        getStylesheets().add(getClass().getResource(CSS_LOCATION).toExternalForm());
+	}
         
-/*		getChildren().addListener((ListChangeListener.Change<? extends Node> c) -> {
-			while (c.next()) {
-				for (Node added : c.getAddedSubList()) {
-					if (!(added instanceof Text) && !(added instanceof TextField)) {
-						getChildren().remove(added);
-					}
-				}
-			}
-		});
-*/	}
-
 	/**
 	 * 
 	 * @param prompts

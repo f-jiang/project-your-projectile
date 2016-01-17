@@ -86,6 +86,7 @@ public class GameplayScreenController implements ControlledScreen {
 			removeFunction(currentFunction);
 		}
 		currentFunction = new MathFunction(MathFunctionType.QUADRATIC_STANDARD_FORM);
+		currentFunction.setIndependentVariable("deez_nuts");
 		plotFunction(currentFunction, -5.0, 10.0);
 		
 		userInput.update(currentFunction.getSplitPartialEquation(false, true), "_");
