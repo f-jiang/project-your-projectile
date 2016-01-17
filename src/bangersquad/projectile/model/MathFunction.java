@@ -5,8 +5,11 @@ package bangersquad.projectile.model;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+import java.util.LinkedHashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.List;
@@ -33,7 +36,8 @@ public class MathFunction {
 	
 	private MathFunctionType type;
 	private Map<String, Integer> variables = new HashMap<>();
-	private List<String> missingVariables = new ArrayList<>();
+	private Set<String> missingVariables = new LinkedHashSet<>();
+	private Set<String> visibleVariables = new HashSet<>();
 	private String equation;
 	private String partialEquation;
 	private String independentVariable = "x";
@@ -47,9 +51,9 @@ public class MathFunction {
 		this.type = type;
 		
 		generateVariables();
-		determineMissingVariables();
-		
 		updateEquation();
+		
+		determineMissingVariables();	// FIXME won't work if updateEquation() hasn't been called before
 		updatePartialEquation();
 	}
 	
@@ -184,15 +188,20 @@ public class MathFunction {
 	
 	private String blankOut(String exp) {
 		StringBuilder regex = new StringBuilder();
+		Iterator<String> iter = missingVariables.iterator();
+		int i = 0;
+		int j = missingVariables.size();
 		
-		for (int i = 0, j = missingVariables.size(); i < j; i++) {
-			regex.append(missingVariables.get(i));
+		while (iter.hasNext()) {
+			regex.append(iter.next());
 			
 			if (i < j - 1) {
 				regex.append('|');
 			}
+			
+			i++;
 		}
-		
+
 		return exp.replaceAll(regex.toString(), blankValue);
 	}
 	
@@ -262,6 +271,27 @@ public class MathFunction {
 		}				
 	}
 	
+	private void determineMissingVariables() {
+		Iterator<String> iter = visibleVariables.iterator();
+		String name;
+		int numReplaced = 0;
+		int i = 0;
+		int j = visibleVariables.size();
+		
+		missingVariables.clear();
+		
+		while (iter.hasNext()) {
+			name = iter.next();
+			
+			if ((Math.random() > 0.5) || (numReplaced == 0 && i == j - 1)) {
+				missingVariables.add(name);
+				numReplaced++;
+			}
+			
+			i++;
+		}
+	}
+
 	private void updateEquation() {
 		int var;
 		
@@ -280,6 +310,7 @@ public class MathFunction {
 				equation = equation.replaceAll("a\\*", "-");
 			} else {
 				equation = equation.replaceAll("a", Integer.toString(var));
+				visibleVariables.add("a");
 			}
 			
 			
@@ -289,11 +320,13 @@ public class MathFunction {
 				equation = equation.replaceAll("\\(x - s\\)", "x");
 			} else {
 				equation = equation.replaceAll("s", Integer.toString(var));
+				visibleVariables.add("s");
 			}			
 
 			// r
 			var = variables.get("r");
 			equation = equation.replaceAll("r", Integer.toString(var));
+			visibleVariables.add("r");
 			
 			break;
 		case QUADRATIC_STANDARD_FORM:	// f(x) = ax^2 + bx + c
@@ -305,6 +338,7 @@ public class MathFunction {
 				equation = equation.replaceAll("a\\*", "-");
 			} else {
 				equation = equation.replaceAll("a", Integer.toString(var));
+				visibleVariables.add("a");
 			}
 			
 			// b
@@ -317,6 +351,7 @@ public class MathFunction {
 				equation = equation.replaceAll("b\\*", "-");
 			} else {
 				equation = equation.replaceAll("b", Integer.toString(var));
+				visibleVariables.add("b");
 			}			
 
 			// c
@@ -325,6 +360,7 @@ public class MathFunction {
 				equation = equation.replaceAll(" \\+ c", "");
 			} else {
 				equation = equation.replaceAll("c", Integer.toString(var));
+				visibleVariables.add("c");
 			}
 			
 			break;
@@ -337,24 +373,28 @@ public class MathFunction {
 				equation = equation.replaceAll("a\\*", "-");
 			} else {
 				equation = equation.replaceAll("a", Integer.toString(var));
+				visibleVariables.add("a");
 			}
 
 			// h
 			var = variables.get("h");
 			equation = equation.replaceAll("h", Integer.toString(var));
+			visibleVariables.add("h");
 
 			// k
 			var = variables.get("k");
 			equation = equation.replaceAll("k", Integer.toString(var));
-
+			visibleVariables.add("k");
+			
 			break;
 		default:
 			break;
-		}		
+		}
 		
 		equation = clean(equation);
 	}
 	
+	// FIXME 0s and 1s are shown in partial equation (don't plug into base equation, might need to refactor class)
 	private void updatePartialEquation() {
 		HashSet<String> intactVariables = new HashSet<>(variables.keySet());
 		Integer val;
@@ -370,38 +410,6 @@ public class MathFunction {
 		}
 		
 		partialEquation = clean(partialEquation);		
-	}
-	
-	private void determineMissingVariables() {
-		// option 1: start from equation var
-		// have a way of distinguishing variables from constants
-		// remove some of the variables
-		
-		// more possibitlies with this version
-		// option 2: start from BASE_EQUATION
-		// plug in all existing coefficients (so that even ones and zeros show)
-		// remove some ones and zeros
-		// remove some of the remaining variables
-		Set<Map.Entry<String, Integer>> entries = variables.entrySet();
-		String name;
-		Integer value;
-		int numReplaced = 0;
-		int i = 0;
-		
-		missingVariables.clear();
-		
-		// FIXME: if last var is a constant equal to 0, it gets plugged if nothing before it has
-		// FIXME: sometimes nothing gets plugged in (don't know why)
-		for (Map.Entry<String, Integer> var : entries) {
-			name = var.getKey();
-			value = var.getValue();
-			
-			if (!((Math.random() > 0.5 && value != 0 && Math.abs(value) != 1) || (numReplaced == 0 && i == entries.size() - 1))) {
-				missingVariables.add(name);
-			}
-			
-			i++;
-		}
 	}
 	
 }
