@@ -1,10 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bangersquad.projectile.view.screens.InstructionsScreenController">
-</BorderPane>
+<AnchorPane prefHeight="300.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bangersquad.projectile.view.screens.InstructionsScreenController">
+   <children>
+      <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <TextArea editable="false" text="Welcome to Project Your Projectile. Have a fun time learning about&#10;quadratic equations.&#10;&#10;The game simulates a ball shooting game where you have to choose&#10;the trajectory of the ball. The trajectory is a parabola represented by&#10;a quadratic equation and you can change it by changing variables and &#10;coefficients in the equation. &#10;&#10;In the settings menu, select the equation form that you would like &#10;to practice with. Once you have chosen, click on play to start the&#10;game. On the bottom right corner, you can put in your equation &#10;such that the ball hits the target and then press the button on the&#10;bottom left to shoot the ball.&#10;&#10;If you are correct you will earn points, but if you miss you will loose &#10;points. Try to get as many points as possible.&#10;&#10;">
+               <VBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </VBox.margin>
+            </TextArea>
+            <Button mnemonicParsing="false" onAction="#goToMain" text="Back">
+               <VBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </VBox.margin>
+            </Button>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
