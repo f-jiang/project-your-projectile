@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Scanner;
 import java.util.Set;
 import java.util.LinkedHashSet;
 import java.util.regex.Matcher;
@@ -36,8 +37,9 @@ public class MathFunction {
 	
 	private MathFunctionType type;
 	private Map<String, Integer> variables = new HashMap<>();
-	private Set<String> missingVariables = new LinkedHashSet<>();
+	private Set<String> blankVariables = new LinkedHashSet<>();
 	private Set<String> visibleVariables = new HashSet<>();
+	private String baseEquation;
 	private String equation;
 	private String partialEquation;
 	private String independentVariable = "x";
@@ -51,9 +53,11 @@ public class MathFunction {
 		this.type = type;
 		
 		generateVariables();
+		updateBaseEquation();
+		
 		updateEquation();
 		
-		determineMissingVariables();	// FIXME won't work if updateEquation() hasn't been called before
+		determineBlankVariables();	// FIXME won't work if updateEquation() hasn't been called before
 		updatePartialEquation();
 	}
 	
@@ -97,8 +101,8 @@ public class MathFunction {
 		return independentVariable;
 	}
 	
-	public String[] getMissingVariables() {
-		return missingVariables.toArray(new String[0]);
+	public String[] getBlankVariables() {
+		return blankVariables.toArray(new String[0]);
 	}
 	
 	/**
@@ -106,6 +110,9 @@ public class MathFunction {
 	 * @param name
 	 */
 	public void setIndependentVariable(String name) {
+		independentVariable = name;
+		
+		updateBaseEquation();
 		updateEquation();
 		updatePartialEquation();
 	}
@@ -188,9 +195,9 @@ public class MathFunction {
 	
 	private String blankOut(String exp) {
 		StringBuilder regex = new StringBuilder();
-		Iterator<String> iter = missingVariables.iterator();
+		Iterator<String> iter = blankVariables.iterator();
 		int i = 0;
-		int j = missingVariables.size();
+		int j = blankVariables.size();
 		
 		while (iter.hasNext()) {
 			regex.append(iter.next());
@@ -271,20 +278,20 @@ public class MathFunction {
 		}				
 	}
 	
-	private void determineMissingVariables() {
+	private void determineBlankVariables() {
 		Iterator<String> iter = visibleVariables.iterator();
 		String name;
 		int numReplaced = 0;
 		int i = 0;
 		int j = visibleVariables.size();
 		
-		missingVariables.clear();
+		blankVariables.clear();
 		
 		while (iter.hasNext()) {
 			name = iter.next();
 			
 			if ((Math.random() > 0.5) || (numReplaced == 0 && i == j - 1)) {
-				missingVariables.add(name);
+				blankVariables.add(name);
 				numReplaced++;
 			}
 			
@@ -292,24 +299,21 @@ public class MathFunction {
 		}
 	}
 
-	private void updateEquation() {
+	private void updateBaseEquation() {
 		int var;
 		
-		equation = type.getBaseEquation(independentVariable);
+		baseEquation = type.getBaseEquation(independentVariable);
 		
-		// TODO: create variables to represent the coefficients, maybe inside MathFunctionType
-		// TODO: to reduce repetitive code, see if a common behaviour can be defined for plugging in different types of variables
 		switch (this.type) {
 		case QUADRATIC_FACTORED_FORM:	// f(x) = a(x - s)(x - r)
 			// TODO: add coefficients for x
 			// a
 			var = variables.get("a");
 			if (var == 1) {
-				equation = equation.replaceAll("a\\*", "");
+				baseEquation = baseEquation.replaceAll("a\\*", "");
 			} else if (var == -1) {
-				equation = equation.replaceAll("a\\*", "-");
+				baseEquation = baseEquation.replaceAll("a\\*", "-");
 			} else {
-				equation = equation.replaceAll("a", Integer.toString(var));
 				visibleVariables.add("a");
 			}
 			
@@ -317,15 +321,12 @@ public class MathFunction {
 			// s
 			var = variables.get("s");
 			if (var == 0) {
-				equation = equation.replaceAll("\\(x - s\\)", "x");
+				baseEquation = baseEquation.replaceAll("\\(x - s\\)", "x");
 			} else {
-				equation = equation.replaceAll("s", Integer.toString(var));
 				visibleVariables.add("s");
 			}			
 
 			// r
-			var = variables.get("r");
-			equation = equation.replaceAll("r", Integer.toString(var));
 			visibleVariables.add("r");
 			
 			break;
@@ -333,33 +334,30 @@ public class MathFunction {
 			// a
 			var = variables.get("a");
 			if (var == 1) {
-				equation = equation.replaceAll("a\\*", "");
+				baseEquation = baseEquation.replaceAll("a\\*", "");
 			} else if (var == -1) {
-				equation = equation.replaceAll("a\\*", "-");
+				baseEquation = baseEquation.replaceAll("a\\*", "-");
 			} else {
-				equation = equation.replaceAll("a", Integer.toString(var));
 				visibleVariables.add("a");
 			}
 			
 			// b
 			var = variables.get("b");
 			if (var == 0) {
-				equation = equation.replaceAll(" \\+ b\\*x", "");
+				baseEquation = baseEquation.replaceAll(" \\+ b\\*x", "");
 			} else if (var == 1) {
-				equation = equation.replaceAll("b\\*", "");
+				baseEquation = baseEquation.replaceAll("b\\*", "");
 			} else if (var == -1) {
-				equation = equation.replaceAll("b\\*", "-");
+				baseEquation = baseEquation.replaceAll("b\\*", "-");
 			} else {
-				equation = equation.replaceAll("b", Integer.toString(var));
 				visibleVariables.add("b");
 			}			
 
 			// c
 			var = variables.get("c");
 			if (var == 0) {
-				equation = equation.replaceAll(" \\+ c", "");
+				baseEquation = baseEquation.replaceAll(" \\+ c", "");
 			} else {
-				equation = equation.replaceAll("c", Integer.toString(var));
 				visibleVariables.add("c");
 			}
 			
@@ -368,40 +366,45 @@ public class MathFunction {
 			// a
 			var = variables.get("a");
 			if (var == 1) {
-				equation = equation.replaceAll("a\\*", "");
+				baseEquation = baseEquation.replaceAll("a\\*", "");
 			} else if (var == -1) {
-				equation = equation.replaceAll("a\\*", "-");
+				baseEquation = baseEquation.replaceAll("a\\*", "-");
 			} else {
-				equation = equation.replaceAll("a", Integer.toString(var));
 				visibleVariables.add("a");
 			}
 
 			// h
-			var = variables.get("h");
-			equation = equation.replaceAll("h", Integer.toString(var));
 			visibleVariables.add("h");
 
 			// k
-			var = variables.get("k");
-			equation = equation.replaceAll("k", Integer.toString(var));
 			visibleVariables.add("k");
 			
 			break;
 		default:
 			break;
 		}
+	}
+
+	private void updateEquation() {
+		equation = baseEquation;
 		
+		for (String var : visibleVariables) {
+			equation = equation.replaceAll(var, Integer.toString(variables.get(var)));
+		}
+		
+		// TODO: create variables to represent the coefficients, maybe inside MathFunctionType
+		// TODO: to reduce repetitive code, see if a common behaviour can be defined for plugging in different types of variables
+
 		equation = clean(equation);
 	}
 	
-	// FIXME 0s and 1s are shown in partial equation (don't plug into base equation, might need to refactor class)
 	private void updatePartialEquation() {
-		HashSet<String> intactVariables = new HashSet<>(variables.keySet());
+		HashSet<String> intactVariables = new HashSet<>(visibleVariables);
 		Integer val;
 		
-		intactVariables.removeAll(missingVariables);
+		intactVariables.removeAll(blankVariables);
 		
-		partialEquation = type.getBaseEquation(independentVariable);		
+		partialEquation = baseEquation;		
 		
 		// plug in
 		for (String var : intactVariables) {
@@ -410,6 +413,20 @@ public class MathFunction {
 		}
 		
 		partialEquation = clean(partialEquation);		
+	}
+	
+	static public void test() {
+		Scanner s = new Scanner(System.in);
+		MathFunction func;
+		
+		while (true) {
+			func = new MathFunction(MathFunctionType.QUADRATIC_VERTEX_FORM);
+			System.out.println(func.getEquation(false));
+			System.out.println(func.getPartialEquation(false, false));
+			System.out.println(func.getPartialEquation(false, true));
+
+			s.nextLine();
+		}
 	}
 	
 }
