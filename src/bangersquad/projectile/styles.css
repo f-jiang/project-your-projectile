@@ -1,0 +1,40 @@
+#title {
+	-fx-font-weight: bold;
+	/*-fx-font-family: "TimeBurner";*/
+}
+
+.round-button {
+	-fx-text-alignment: center;
+	-fx-background-radius: 100;
+	-fx-min-width: 5em;
+	-fx-min-height: 5em;
+	/*-fx-background-color: #5FB2B7;
+	-fx-font-size: 1em;
+	-fx-text-fill: #EFEFEF;*/
+	/*-fx-font-family: "TimeBurner";*/	
+}
+
+.round-button:hover {
+	/*-fx-background-color: #64BDC1;*/
+}
+
+.round-button:pressed {
+	/*-fx-font-size: 0.9em;
+	-fx-background-color: #6ECED3;*/
+}
+
+.fill-in-the-blanks {
+	/*-fx-background-color: #DDDDDD;
+	-fx-border-color: #324453;
+	-fx-border-width: 0.2em;*/
+}
+
+.fill-in-the-blanks .text-field {
+	/*-fx-background-radius: 0;*/
+}
+
+.fill-in-the-blanks .text {
+	/*-fx-font-size: 1em;
+	-fx-text-fill: #1E1E1E;*/
+	/*-fx-font-family: "TimeBurner";*/
+}
