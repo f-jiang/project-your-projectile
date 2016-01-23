@@ -6,8 +6,9 @@
 .round-button {
 	-fx-text-alignment: center;
 	-fx-background-radius: 100;
-	-fx-min-width: 5em;
-	-fx-min-height: 5em;
+	-fx-min-width: 6.5em;
+	-fx-min-height: 6.5em;
+	-fx-border-radius: 50%;
 	/*-fx-background-color: #5FB2B7;
 	-fx-font-size: 1em;
 	-fx-text-fill: #EFEFEF;*/

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.effect.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
@@ -12,12 +13,17 @@
 
 <AnchorPane prefHeight="300.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bangersquad.projectile.view.screens.GameplayScreenController">
    <children>
-      <BorderPane fx:id="borderPane" prefHeight="300.0" prefWidth="500.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <BorderPane fx:id="borderPane" prefHeight="500.0" prefWidth="500.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <bottom>
             <HBox prefHeight="26.0" prefWidth="498.0" spacing="20.0" BorderPane.alignment="CENTER">
                <children>
-                  <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="224.0" text="Button" HBox.hgrow="ALWAYS" />
-                  <FillInTheBlanks fx:id="userInput" prefHeight="26.0" prefWidth="322.0" HBox.hgrow="ALWAYS" />
+                  <Button mnemonicParsing="false" onAction="#goToMain" text="Quit">
+                     <HBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </HBox.margin>
+                  </Button>
+                  <FillInTheBlanks fx:id="userInput" prefHeight="26.0" prefWidth="322.0" HBox.hgrow="ALWAYS">
+                  </FillInTheBlanks>
                </children>
             </HBox>
          </bottom>

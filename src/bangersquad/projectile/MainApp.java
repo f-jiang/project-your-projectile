@@ -28,10 +28,11 @@ public class MainApp extends Application {
 		root.loadScreen(GAMEPLAY_SCREEN, GAMEPLAY_SCREEN_FXML);
 		root.setScreen(MAIN_SCREEN);
 		
-		Scene scene = new Scene(root, 500, 300);
+		Scene scene = new Scene(root);
 		
 		primaryStage.setTitle("Project your Projectile!");
 		primaryStage.setScene(scene);
+		primaryStage.setResizable(false);
 		primaryStage.show();
 	}
 	

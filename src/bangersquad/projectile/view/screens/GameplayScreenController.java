@@ -8,8 +8,7 @@ import java.util.List;
 import bangersquad.projectile.MainApp;
 import bangersquad.projectile.ScreenManager;
 import bangersquad.projectile.model.MathFunction;
-import bangersquad.projectile.model.MathFunctionType;
-import bangersquad.projectile.util.RandomNumberUtil;
+import bangersquad.projectile.util.SeriesUtil;
 import bangersquad.projectile.util.calculator.Calculator;
 import bangersquad.projectile.view.ControlledScreen;
 import bangersquad.projectile.view.fillintheblanks.FillInTheBlanks;
@@ -57,11 +56,11 @@ public class GameplayScreenController implements ControlledScreen {
 	@SuppressWarnings("unchecked")
 	@FXML
 	private void initialize() {	// TODO: add styling to the graph
-		xAxis = new NumberAxis("x", -10, 10, 1);
+		xAxis = new NumberAxis("", -10, 10, 1);
 		xAxis.setAutoRanging(false);
 		xAxis.setAnimated(true);
 		
-		yAxis = new NumberAxis("f(x)", -10, 10, 1);
+		yAxis = new NumberAxis("", -10, 10, 1);
 		yAxis.setAutoRanging(false);
 		yAxis.setAnimated(true);
 		
@@ -74,19 +73,10 @@ public class GameplayScreenController implements ControlledScreen {
 	}
 	
 	private void plotFunction(MathFunction function, Double startX, Double endX) {	// TODO: add a left to right animation for this
-		XYChart.Series<Double, Double> points = new XYChart.Series<>();
+		// TODO: add a left to right animation for this
 		String equation = function.getEquation(false);
-		Double y;
-		
-		points.setName(equation);
-		
-		for (Double x = startX; x < endX; x += 0.01) {
-//			System.out.println(Calculator.plugIn(equation, x));	// TODO: use bigdecimal instead for the calculator
-			y = Double.valueOf(Calculator.eval(Calculator.plugIn(equation, x), false));
-			points.getData().add(new XYChart.Data<>(x, y));
-		}
-		
-		chart.getData().add(points);
+		XYChart.Series<Double, Double> series = SeriesUtil.getFunctionSeries(function, equation, startX, endX); 
+		chart.getData().add(series);
 	}
 	
 	private void removeFunction(MathFunction function) {		

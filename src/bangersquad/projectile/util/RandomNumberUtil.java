@@ -17,7 +17,7 @@ public class RandomNumberUtil {
 	 * @param max
 	 * @return
 	 */
-	static public int getRandomInt(int min, int max) {
+	static public int randInt(int min, int max) {
 		Random r = new Random();
 		return r.nextInt(max - min + 1) + min;
 	}

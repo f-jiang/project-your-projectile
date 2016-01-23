@@ -5,8 +5,13 @@ package bangersquad.projectile.view.screens;
 
 import bangersquad.projectile.MainApp;
 import bangersquad.projectile.ScreenManager;
+import bangersquad.projectile.util.SeriesUtil;
 import bangersquad.projectile.view.ControlledScreen;
 import javafx.fxml.FXML;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.control.Button;
+import javafx.scene.layout.AnchorPane;
 
 /**
  * @author feilan
@@ -40,4 +45,8 @@ public class MainScreenController implements ControlledScreen {
 		screenManager.setScreen(MainApp.CREDITS_SCREEN);
 	}
 
+	private void initialize() {
+		
+	}
+	
 }

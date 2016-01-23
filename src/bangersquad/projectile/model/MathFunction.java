@@ -222,17 +222,17 @@ public class MathFunction {
 			// TODO: add coefficients for x
 			// a
 			do {
-				var = RandomNumberUtil.getRandomInt(min, max);
+				var = RandomNumberUtil.randInt(min, max);
 			} while (var == 0);
 			registerVariable("a", var);
 			
 			// s
-			var = RandomNumberUtil.getRandomInt(min, max);
+			var = RandomNumberUtil.randInt(min, max);
 			registerVariable("s", var);
 
 			// r
 			do {
-				var = RandomNumberUtil.getRandomInt(min, max);
+				var = RandomNumberUtil.randInt(min, max);
 			} while (var == 0);
 			registerVariable("r", var);
 			
@@ -240,35 +240,35 @@ public class MathFunction {
 		case QUADRATIC_STANDARD_FORM:	// f(x) = ax^2 + bx + c
 			// a
 			do {
-				var = RandomNumberUtil.getRandomInt(min, max);
+				var = RandomNumberUtil.randInt(min, max);
 			} while (var == 0);
 			registerVariable("a", var);
 			
 			// b
-			var = RandomNumberUtil.getRandomInt(min, max);
+			var = RandomNumberUtil.randInt(min, max);
 			registerVariable("b", var);
 
 			// c
-			var = RandomNumberUtil.getRandomInt(min, max);
+			var = RandomNumberUtil.randInt(min, max);
 			registerVariable("c", var);
 			
 			break;
 		case QUADRATIC_VERTEX_FORM:		// f(x) = a(x - h)^2 + k
 			// a
 			do {
-				var = RandomNumberUtil.getRandomInt(min, max);
+				var = RandomNumberUtil.randInt(min, max);
 			} while (var == 0);
 			registerVariable("a", var);
 
 			// h
 			do {
-				var = RandomNumberUtil.getRandomInt(min, max);
+				var = RandomNumberUtil.randInt(min, max);
 			} while (var == 0);
 			registerVariable("h", var);
 
 			// k
 			do {
-				var = RandomNumberUtil.getRandomInt(min, max);
+				var = RandomNumberUtil.randInt(min, max);
 			} while (var == 0);
 			registerVariable("k", var);
 
