@@ -19,14 +19,26 @@
                <children>
                   <Button mnemonicParsing="false" onAction="#goToMain" text="Quit">
                      <HBox.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                        <Insets bottom="10.0" left="10.0" />
                      </HBox.margin>
                   </Button>
                   <FillInTheBlanks fx:id="userInput" prefHeight="26.0" prefWidth="322.0" HBox.hgrow="ALWAYS">
                   </FillInTheBlanks>
+                  <Button mnemonicParsing="false" text="Launch">
+                     <HBox.margin>
+                        <Insets bottom="10.0" right="10.0" />
+                     </HBox.margin>
+                  </Button>
                </children>
             </HBox>
          </bottom>
+         <top>
+            <ProgressBar fx:id="progressBar" prefHeight="23.0" prefWidth="480.0" progress="0.37" BorderPane.alignment="CENTER">
+               <BorderPane.margin>
+                  <Insets left="10.0" right="10.0" top="10.0" />
+               </BorderPane.margin>
+            </ProgressBar>
+         </top>
       </BorderPane>
    </children>
 </AnchorPane>

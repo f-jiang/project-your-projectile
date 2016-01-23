@@ -16,6 +16,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.chart.NumberAxis;
@@ -36,13 +37,13 @@ public class GameplayScreenController implements ControlledScreen {
 	private NumberAxis yAxis;
 	
 	@FXML
-	private AnchorPane lineChartPane;
-	
-	@FXML
 	private BorderPane borderPane;
 	
 	@FXML
 	private FillInTheBlanks userInput;
+	
+	@FXML
+	private ProgressBar progressBar;
 	
 	public void setScreenManager(ScreenManager manager) {
 		screenManager = manager;

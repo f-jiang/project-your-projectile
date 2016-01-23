@@ -1,6 +1,9 @@
 #title {
-	-fx-font-weight: bold;
-	/*-fx-font-family: "TimeBurner";*/
+	-fx-font-style: italic;
+	-fx-text-fill: #41A9C9;
+	-fx-text-alignment: center;
+	-fx-font-size: 2.5em;
+	-fx-effect: dropshadow(gaussian, #41A9C9, 3.0, 0.0, 0.0, 0.0);
 }
 
 .round-button {

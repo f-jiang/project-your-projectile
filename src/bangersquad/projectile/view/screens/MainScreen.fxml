@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.effect.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.chart.*?>
 <?import javafx.scene.control.*?>
@@ -18,5 +19,6 @@
       <Button layoutX="137.0" layoutY="353.0" mnemonicParsing="false" onAction="#goToInstructions" styleClass="round-button" stylesheets="@../../styles.css" text="Instructions" />
       <Button layoutX="287.0" layoutY="313.0" mnemonicParsing="false" onAction="#goToSettings" styleClass="round-button" stylesheets="@../../styles.css" text="Settings" />
       <Button layoutX="373.0" layoutY="201.0" mnemonicParsing="false" onAction="#goToCredits" styleClass="round-button" stylesheets="@../../styles.css" text="Credits" />
+      <Label id="title" layoutX="31.0" layoutY="74.0" stylesheets="@../../styles.css" text="Project Your Projectile!" />
    </children>
 </AnchorPane>
