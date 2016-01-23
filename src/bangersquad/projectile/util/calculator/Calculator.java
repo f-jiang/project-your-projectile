@@ -40,6 +40,7 @@ public class Calculator {
 //        System.out.println("Expression before plugging in: " + exp);
         exp = plugIn(exp);
 //        System.out.println("Expression after plugging in: " + exp);
+        exp = addUnaryMinuses(exp);
 
         ArrayDeque<String> expQueue = queueify(exp);
         ArrayDeque<Double> operandStack = new ArrayDeque<>();
@@ -123,6 +124,7 @@ public class Calculator {
      * @return
      */
     public static String toPostfix(String exp) {
+    	exp = addUnaryMinuses(exp);
         ArrayDeque<String> expQueue = queueify(exp);
         return Calculator.toPostfix(expQueue).toString();
     }    
@@ -208,16 +210,29 @@ public class Calculator {
     }
 
     private static String addUnaryMinuses(String exp) {
-    	String regex = String.format("%s\\%s", Operator.SUBTRACTION.value, Operator.LEFT_PARENTHESIS.value);
-    	String replacement = String.format("%s\\%s", Operator.UNARY_MINUS.value, Operator.LEFT_PARENTHESIS.value);
-    	return exp.replaceAll(regex, replacement);
+    	String regex;
+    	
+    	// 3 - 4	no
+    	// 3 + -4	no
+    	// 3 -4		no
+    	// 3 --4	no
+    	// 3--4		no
+    	// --4		yes
+    	// 
+    	regex = String.format("--(?=%s)", NUMBER_PATTERN);
+    	exp = exp.replaceAll(regex, "");
+    	
+    	// -(3 + 4) ---> _(3 + 4)
+    	regex = String.format("%s(?=\\%s)", Operator.SUBTRACTION.value, Operator.LEFT_PARENTHESIS.value);
+    	exp = exp.replaceAll(regex, Operator.UNARY_MINUS.value);
+
+    	return exp;
     }
     
     private static ArrayDeque<String> queueify(String exp) {
         ArrayDeque<String> expQueue = new ArrayDeque<>();
         String item;
         
-        exp = addUnaryMinuses(exp);
         pattern = Pattern.compile(String.format("%s|%s|%s", VARIABLE_PATTERN, NUMBER_PATTERN, OPERATOR_PATTERN));
         matcher = pattern.matcher(exp);
         
@@ -264,11 +279,14 @@ public class Calculator {
                 } else if (op == Operator.RIGHT_PARENTHESIS) {
                     exp.removeFirst();	// discard token
                     foundRightParenthesis = true;
+                } else if (op == Operator.UNARY_MINUS && topOp == Operator.UNARY_MINUS) {
+                	exp.removeFirst();
+                	ops.removeFirst();
                 } else if (topOp.precedence < op.precedence || topOp == Operator.LEFT_PARENTHESIS) {
                     exp.removeFirst();
                     ops.addFirst(op);	// push token to op stack
                 } else if (topOp.precedence >= op.precedence) {
-                    ops.removeFirst();
+                	ops.removeFirst();
                     postfixExp.addLast(topOp.value);	// push postfix	
                 }
             }
@@ -312,7 +330,8 @@ public class Calculator {
                 switch (input) {
                     case EVALUATE_INFIX:
                         System.out.print("Expression: ");
-                        input = s.nextLine();                        
+                        input = addUnaryMinuses(s.nextLine());      
+                        System.out.println(input);
                         System.out.println(Calculator.queueify(input));
                         System.out.println(Calculator.toPostfix(input));
                         System.out.println(Calculator.eval(input, false));
