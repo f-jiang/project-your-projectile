@@ -21,4 +21,16 @@ public class RandomNumberUtil {
 		Random r = new Random();
 		return r.nextInt(max - min + 1) + min;
 	}
+
+	/**
+	 * 
+	 * @param min
+	 * @param max
+	 * @return
+	 */
+	static public double randDouble(double min, double max) {
+		Random r = new Random();
+		return r.nextDouble() * (max - min + 1) + min;
+	}
+	
 }

@@ -8,6 +8,7 @@ import java.util.List;
 import bangersquad.projectile.MainApp;
 import bangersquad.projectile.ScreenManager;
 import bangersquad.projectile.model.MathFunction;
+import bangersquad.projectile.util.RandomNumberUtil;
 import bangersquad.projectile.util.SeriesUtil;
 import bangersquad.projectile.util.calculator.Calculator;
 import bangersquad.projectile.view.ControlledScreen;
@@ -44,6 +45,8 @@ public class GameplayScreenController implements ControlledScreen {
 	
 	@FXML
 	private ProgressBar progressBar;
+	private MathFunction currentFunction;	// test
+	private int i = 0;	// test
 	
 	public void setScreenManager(ScreenManager manager) {
 		screenManager = manager;
@@ -72,6 +75,28 @@ public class GameplayScreenController implements ControlledScreen {
 		
 		borderPane.setCenter(chart);
 	}
+	
+	@FXML
+	private void test() {
+		int startX = -10;
+		int endX = 10;
+		
+		double targetX = RandomNumberUtil.randInt(-10, 10);
+		double targetY = RandomNumberUtil.randInt(-10, 10);
+		double targetSize = RandomNumberUtil.randInt(-10, 10);
+		i = i++ % MathFunction.Type.values().length;
+		
+		positionTarget(targetX, targetY, targetSize, Math.random() > 0.5 ? TargetOrientation.HORIZONTAL : TargetOrientation.VERTICAL);
+
+		if (currentFunction != null) {
+			removeFunction(currentFunction);
+		}
+		currentFunction = new MathFunction(MathFunction.Type.values()[i], startX, endX);
+		plotFunction(currentFunction, (double) startX, (double) endX);
+		
+		userInput.update(currentFunction.getSplitPartialEquation(false, true), "_");
+		userInput.setPrompts(currentFunction.getBlankVariables());
+	}	
 	
 	private void plotFunction(MathFunction function, Double startX, Double endX) {	// TODO: add a left to right animation for this
 		// TODO: add a left to right animation for this

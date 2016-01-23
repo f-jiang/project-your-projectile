@@ -13,8 +13,7 @@ public class SeriesUtil {
 		
 		points.setName(name);
 		
-		for (Double x = startX; x < endX; x += 0.01) {
-//			System.out.println(Calculator.plugIn(equation, x));	// TODO: use bigdecimal instead for the calculator
+		for (Double x = startX; x < endX; x += 0.1) {
 			y = Double.valueOf(Calculator.eval(Calculator.plugIn(equation, x), false));
 			points.getData().add(new XYChart.Data<>(x, y));
 		}
