@@ -25,17 +25,33 @@ import bangersquad.projectile.util.RandomNumberUtil;
  */
 public class MathFunction {
 	
-	/**
-	 * 
-	 */
-	public static int min = -10;
+	public enum Type {
+		QUADRATIC_STANDARD_FORM("a*_^2 + b*_ + c"),
+		QUADRATIC_FACTORED_FORM("a*(_ - s)*(_ - r)"),
+		QUADRATIC_VERTEX_FORM("a*(_ - h)^2 + k");
+		
+		private final String baseEquation;
+		
+		/**
+		 * 
+		 * @param eq
+		 */
+		Type(String eq) {
+			baseEquation = eq;
+		}
+		
+		/**
+		 * 
+		 * @param independentVariable
+		 * @return
+		 */
+		public String getBaseEquation(String independentVariable) {
+			return baseEquation.replaceAll("_", independentVariable); 
+		}
+		
+	}	
 	
-	/**
-	 * 
-	 */
-	public static int max = 10;
-	
-	private MathFunctionType type;
+	private Type type;
 	private Map<String, Integer> variables = new HashMap<>();
 	private Set<String> blankVariables = new LinkedHashSet<>();
 	private Set<String> visibleVariables = new HashSet<>();
@@ -44,13 +60,17 @@ public class MathFunction {
 	private String partialEquation;
 	private String independentVariable = "x";
 	private String blankValue = "_";
+	private int min;
+	private int max;
 	
 	/**
 	 * 
 	 * @param type
 	 */
-	public MathFunction(MathFunctionType type) {
+	public MathFunction(Type type, int min, int max) {
 		this.type = type;
+		this.min = min;
+		this.max = max;
 		
 		generateVariables();
 		updateBaseEquation();
@@ -61,7 +81,7 @@ public class MathFunction {
 		updatePartialEquation();
 	}
 	
-	public MathFunctionType getType() {
+	public Type getType() {
 		return type;
 	}
 	
@@ -415,16 +435,19 @@ public class MathFunction {
 		partialEquation = clean(partialEquation);		
 	}
 	
-	static public void test() {
+	static public void test(MathFunction.Type... types) {
 		Scanner s = new Scanner(System.in);
 		MathFunction func;
+		MathFunction.Type[] funcTypes = (types.length == 0) ? MathFunction.Type.values() : types;
+		int i = 0;
 		
 		while (true) {
-			func = new MathFunction(MathFunctionType.QUADRATIC_VERTEX_FORM);
+			func = new MathFunction(funcTypes[i], -10, 10);
 			System.out.println(func.getEquation(false));
 			System.out.println(func.getPartialEquation(false, false));
 			System.out.println(func.getPartialEquation(false, true));
 
+			i = ++i % funcTypes.length;
 			s.nextLine();
 		}
 	}
