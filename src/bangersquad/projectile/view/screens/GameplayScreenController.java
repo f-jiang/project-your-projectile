@@ -3,23 +3,21 @@
  */
 package bangersquad.projectile.view.screens;
 
-import java.util.List;
-
 import bangersquad.projectile.MainApp;
 import bangersquad.projectile.ScreenManager;
 import bangersquad.projectile.model.MathFunction;
 import bangersquad.projectile.util.RandomNumberUtil;
 import bangersquad.projectile.util.SeriesUtil;
-import bangersquad.projectile.util.calculator.Calculator;
 import bangersquad.projectile.view.ControlledScreen;
 import bangersquad.projectile.view.fillintheblanks.FillInTheBlanks;
+import javafx.animation.AnimationTimer;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.util.Duration;
 import javafx.scene.chart.NumberAxis;
 
 /**
@@ -83,26 +81,43 @@ public class GameplayScreenController implements ControlledScreen {
 		
 		double targetX = RandomNumberUtil.randInt(-10, 10);
 		double targetY = RandomNumberUtil.randInt(-10, 10);
-		double targetSize = RandomNumberUtil.randInt(-10, 10);
-		i = i++ % MathFunction.Type.values().length;
-		
+		double targetSize = RandomNumberUtil.randInt(5, 10);
+		i = ++i % MathFunction.Type.values().length;
+
 		positionTarget(targetX, targetY, targetSize, Math.random() > 0.5 ? TargetOrientation.HORIZONTAL : TargetOrientation.VERTICAL);
 
 		if (currentFunction != null) {
 			removeFunction(currentFunction);
 		}
-		currentFunction = new MathFunction(MathFunction.Type.values()[i], startX, endX);
-		plotFunction(currentFunction, (double) startX, (double) endX);
+		
+		currentFunction = new MathFunction(MathFunction.Type.values()[i], -3, 3);
+		plotFunction(currentFunction, (double) startX, (double) endX, 0.1);
 		
 		userInput.update(currentFunction.getSplitPartialEquation(false, true), "_");
 		userInput.setPrompts(currentFunction.getBlankVariables());
 	}	
 	
-	private void plotFunction(MathFunction function, Double startX, Double endX) {	// TODO: add a left to right animation for this
-		// TODO: add a left to right animation for this
+	private void plotFunction(MathFunction function, Double startX, Double endX, Double increment) {
 		String equation = function.getEquation(false);
-		XYChart.Series<Double, Double> series = SeriesUtil.getFunctionSeries(function, equation, startX, endX); 
-		chart.getData().add(series);
+		ObservableList<XYChart.Data<Double, Double>> dataPoints = 
+			SeriesUtil.getFunctionSeries(function, equation, startX, endX, increment).getData();
+		XYChart.Series<Double, Double> plottedSeries = new XYChart.Series<>();
+		AnimationTimer plotAnimation = new AnimationTimer() {			
+			@Override
+			public void handle(long now) {
+				if (dataPoints.isEmpty()) {
+					System.out.println("done");
+					stop();
+				} else {
+					XYChart.Data<Double, Double> dataPoint = dataPoints.remove(0);
+					plottedSeries.getData().add(dataPoint);
+				}
+			}
+		};
+		
+		plottedSeries.setName(function.getEquation(false));
+		chart.getData().add(plottedSeries);
+		plotAnimation.start();
 	}
 	
 	private void removeFunction(MathFunction function) {		
