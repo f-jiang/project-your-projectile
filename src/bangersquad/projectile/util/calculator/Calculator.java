@@ -32,9 +32,16 @@ public class Calculator {
     
     /**
      * 
-     * @param exp
-     * @param isPostfix
-     * @return
+     * Evaluates a mathematical expression and returns the result as a <code>String</code>.
+     * If desired, the expression can be entered in postfix notation.
+     * <p>
+     * Infix example: "3 + 4"
+     * <p>
+     * Postfix example: "3 4 +"
+     * 
+     * @param exp			mathematical expression
+     * @param isPostfix		whether to use postix notation
+     * @return				the value of the expression
      */
     public static String eval(String exp, boolean isPostfix) {
 //        System.out.println("Expression before plugging in: " + exp);

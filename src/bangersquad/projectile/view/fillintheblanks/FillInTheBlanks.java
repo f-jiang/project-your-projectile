@@ -29,6 +29,10 @@ public class FillInTheBlanks extends AnchorPane {
 	
 	private String[] prompts = new String[0];
 
+	/**
+	 * Initializes a new <code>FillInTheBlanks</code>. This object consists of a text string with <code>TextField</code>s
+	 * inserted in place of the blanks.
+	 */
 	public FillInTheBlanks() {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource(FXML_LOCATION));
 		
@@ -43,8 +47,16 @@ public class FillInTheBlanks extends AnchorPane {
 	}
         
 	/**
-	 * 
-	 * @param prompts
+	 * Specifies a text prompt to be displayed in this object's <code>TextField</code>s. 
+	 * The prompts are applied in the order in which they are provided.
+	 * <p>
+	 * <pre>
+	 * {@code
+	 * fillInTheBlanks.update("January _, _", _);	// I now have two TextFields, one for each blank
+	 * fillInTheBlanks.setPrompts("Day", "Month");	// the first blank's prompt is "Day", the second blank's prompt is "Month" 
+	 * }
+	 * </pre>
+	 * @param prompts	a series or array of prompts to use
 	 */
 	public void setPrompts(String... prompts) {
 		this.prompts = prompts;
@@ -52,9 +64,13 @@ public class FillInTheBlanks extends AnchorPane {
 	}
 	
 	/**
-	 * 
-	 * @param textPieces
-	 * @param blankRegex
+	 * Updates the text of this <code>FillInTheBlanks</code>. A special symbol, specified by <code>blankRegex</code>, can be used
+	 * to indicate the locations of blanks.
+	 * <p>
+	 * For this version of <code>update()</code>, the text must be an array of <code>String</code>s. Blank-symbol detection is done on a per-piece basis.
+	 * For instance, using a <code>blankRegex</code> of <code>"_"</code> on the piece <code>"_*x + "</code> would not yield any blanks.
+	 * @param textPieces	the array of <code>String</code>s to which this <code>FillInTheBlanks</code>'s text will be set
+	 * @param blankRegex	the regular expression (symbol) to use for finding blanks
 	 */
 	public void update(String[] textPieces, String blankRegex) {
 		TextField blankText;
@@ -80,9 +96,13 @@ public class FillInTheBlanks extends AnchorPane {
 	}
 
 	/**
-	 * 
-	 * @param textPieces
-	 * @param blankRegex
+	 * Updates the text of this <code>FillInTheBlanks</code>. A special symbol, specified by <code>blankRegex</code>, can be used
+	 * to indicate the locations of blanks.
+	 * <p>
+	 * For this version of <code>update()</code>, the text must be a <code>List</code> of <code>String</code>s. Blank-symbol detection is done on a per-piece basis.
+	 * For instance, using a <code>blankRegex</code> of <code>"_"</code> on the piece <code>"_*x + "</code> would not yield any blanks.
+	 * @param textPieces	the <code>List</code> of <code>String</code>s to which this <code>FillInTheBlanks</code>'s text will be set
+	 * @param blankRegex	the regular expression (symbol) to use for finding blanks
 	 */
 	public void update(List<String> textPieces, String blankRegex) {
 		TextField blankText;
@@ -108,9 +128,10 @@ public class FillInTheBlanks extends AnchorPane {
 	}
 
 	/**
-	 * 
-	 * @param text
-	 * @param blankRegex
+	 * Updates the text of this <code>FillInTheBlanks</code>. A special symbol, specified by <code>blankRegex</code>, can be used
+	 * to indicate the locations of blanks.
+	 * @param text			the <code>String</code> to which this <code>FillInTheBlanks</code>'s text will be set
+	 * @param blankRegex	the regular expression (symbol) to use for finding blanks
 	 */
 	public void update(String text, String blankRegex) {		
 		TextField blankText;
@@ -147,8 +168,10 @@ public class FillInTheBlanks extends AnchorPane {
 	}
 
 	/**
+	 * Returns a <code>String</code> containing the text of this <code>FillInTheBlanks</code>. 
+	 * Anything inside the blanks' <code>TextField</code>s is also included in this <code>String</code>. 
 	 * 
-	 * @return
+	 * @return	the text of this <code>FillInTheBlanks</code>
 	 */
 	public String getText() {
 		StringBuilder sb = new StringBuilder();
@@ -178,6 +201,5 @@ public class FillInTheBlanks extends AnchorPane {
 			}
 		}
 	}
-	// TODO: create methods to set text properties such as font, size, colour, etc.
 
 }

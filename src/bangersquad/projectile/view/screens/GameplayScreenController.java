@@ -55,7 +55,7 @@ public class GameplayScreenController implements ControlledScreen {
 	
 	@SuppressWarnings("unchecked")
 	@FXML
-	private void initialize() {	// TODO: add styling to the graph
+	private void initialize() {
 		xAxis = new NumberAxis("", -10, 10, 1);
 		xAxis.setAutoRanging(false);
 		xAxis.setAnimated(true);
@@ -73,7 +73,7 @@ public class GameplayScreenController implements ControlledScreen {
 	}
 	
 	private void plotFunction(MathFunction function, Double startX, Double endX, Double increment) {
-		String equation = function.getEquation(false);
+		String equation = function.getEquation();
 		ObservableList<XYChart.Data<Double, Double>> dataPoints = 
 			SeriesUtil.getFunctionSeries(function, equation, startX, endX, increment).getData();
 		XYChart.Series<Double, Double> plottedSeries = new XYChart.Series<>();
@@ -90,14 +90,14 @@ public class GameplayScreenController implements ControlledScreen {
 			}
 		};
 		
-		plottedSeries.setName(function.getEquation(false));
+		plottedSeries.setName(function.getEquation());
 		chart.getData().add(plottedSeries);
 		plotAnimation.start();
 	}
 	
 	private void removeFunction(MathFunction function) {		
 		for (XYChart.Series<Double, Double> item : chart.getData()) {
-			if (item.getName().equals(function.getEquation(false))) {
+			if (item.getName().equals(function.getEquation())) {
 				chart.getData().remove(item);
 				break;
 			}

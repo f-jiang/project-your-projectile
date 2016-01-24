@@ -42,8 +42,18 @@ public class MathFunction {
 		
 		/**
 		 * 
-		 * @param independentVariable
-		 * @return
+		 * Returns a String representing the general equation of the given function form.
+		 * <p>
+		 * <pre>
+		 * {@code
+		 * MathFunction.Type type = MathFunction.Type.QUADRATIC_VERTEX_FORM;
+		 * String eqn = type.getBaseEquation("t");
+		 * System.out.println(t);	// output: "a*(t - h)^2 + k"
+		 * }
+		 * </pre>
+		 * 
+		 * @param independentVariable 	the variable corresponding to the x-axis of the function's graph
+		 * @return 						the general equation with independentVariable as x
 		 */
 		public String getBaseEquation(String independentVariable) {
 			return baseEquation.replaceAll("_", independentVariable); 
@@ -65,7 +75,21 @@ public class MathFunction {
 	
 	/**
 	 * 
-	 * @param type
+	 * Creates a new MathFunction object. Use this to initialize variables of type <code>MathFunction</code>.
+	 * <p>
+	 * All <code>MathFunction</code>s' variables and coefficients, excluding the x-axis variable, are randomly generated.
+	 * The range of permitted random values is bound within the <code>min</code> and <code>max</code> arguments. 
+	 * <p>
+	 * <pre>
+	 * {@code
+	 * MathFunction.Type type = MathFunction.Type.QUADRATIC_STANDARD_FORM;
+	 * MathFunction func = new MathFunction(type, -10, 10);
+	 * }
+	 * </pre>
+	 * 
+	 * @param type	the type of this <code>MathFunction</code>
+	 * @param min	lowest possible coefficent value
+	 * @param max	highest possible coefficient value
 	 */
 	public MathFunction(Type type, int min, int max) {
 		this.type = type;
@@ -77,34 +101,51 @@ public class MathFunction {
 		
 		updateEquation();
 		
-		determineBlankVariables();	// FIXME won't work if updateEquation() hasn't been called before
+		determineBlankVariables();
 		updatePartialEquation();
 	}
 	
-	public Type getType() {
+	/**
+	 * 
+	 * Returns the general function form that this <code>MathFunction</code> object corresponds to.
+	 * For a list of possible values, see <code>MathFunction.Type</code>. 
+	 * 
+	 * @return	the type of this <code>MathFunction</code>
+	 */
+	public MathFunction.Type getType() {
 		return type;
 	}
 	
 	/**
 	 * 
-	 * @param format
-	 * @return
+	 * Returns the <code>String</code> representing this <code>MathFunction</code>'s equation.
+	 * 
+	 * @return	the equation of this <code>MathFunction</code> 
 	 */
-	public String getEquation(boolean format) {
-		return format ? formatEquation(equation) : equation;
+	public String getEquation() {
+		return equation;
 	}
 	
 	/**
 	 * 
-	 * @param format
-	 * @return
+	 * Returns this <code>MathFunction</code>'s equation. The function will randomly select some of the variables for removal.
+	 * <p>
+	 * The removed variables can be replaced with either their names from the general equation or with an underscore (_). This option is set by <code>blankout</code> 
+	 * <pre>
+	 * {@code
+	 * MathFunction.Type type = MathFunction.Type.LINEAR;
+	 * MathFunction func = new MathFunction(type, -4, 4);
+	 * String equation = func.getEquation();				// "3*x + 6"
+	 * String partialEqn = func.getPartialEquation(false);	// "m*x + 6"
+	 * String blankEqn = func.getPartialEquation(true);		// "_*x + 6"
+	 * }
+	 * </pre>
+	 * 
+	 * @param blankOut	the symbol to use in place of the removed variables
+	 * @return			this <code>MathFunction</code>'s equation with some variables removed
 	 */
-	public String getPartialEquation(boolean format, boolean blankOut) {
+	public String getPartialEquation(boolean blankOut) {
 		String equation = partialEquation;
-		
-		if (format) {
-			equation = formatEquation(equation);
-		}
 		
 		if (blankOut) {
 			equation = blankOut(equation);
@@ -115,19 +156,31 @@ public class MathFunction {
 	
 	/**
 	 * 
-	 * @return
+	 * Returns a <code>String</code> representing the x-axis variable used in this <code>MathFunction</code>'s equation.
+	 * By default, the independent variable has a name of  <code>"x"</code>.
+	 * 
+	 * @return	the x-axis variable of this <code>MathFunction</code> 
 	 */
 	public String getIndependentVariable() {
 		return independentVariable;
 	}
 	
+	/**
+	 * 
+	 * Returns an array containing the names of the variables that have been removed from this <code>MathFunction</code>'s partial equation.
+	 * 
+	 * @return	an array of the variables removed from the equation
+	 */
 	public String[] getBlankVariables() {
 		return blankVariables.toArray(new String[0]);
 	}
 	
 	/**
 	 * 
-	 * @param name
+	 * Updates this <code>MathFunction</code>'s independent variable. Subsequent calls to <code>getEquation()</code>, 
+	 * <code>getPartialEquation()</code>, and related functions will contain the new independent variable. 
+	 * 
+	 * @param name	the independent variable's new name
 	 */
 	public void setIndependentVariable(String name) {
 		independentVariable = name;
@@ -136,14 +189,19 @@ public class MathFunction {
 		updateEquation();
 		updatePartialEquation();
 	}
-	
+
 	/**
 	 * 
-	 * @param format
-	 * @return
+	 * Returns a <code>List</code> containing the equation's pieces. Each removed variable is treated as a separate piece.
+	 * <p>
+	 * For example, the partial equation <code>"a*x^2 + 3*x - c"</code> would be split into the pieces <code>"a"</code>, 
+	 * <code>"*x^2 + 3*x - "</code>, and <code>"c"</code> if <code>blankOut</code> were set to <code>false</code>.
+	 * Otherwise, the pieces "a" and "c" would both be underscores.
+	 * @param blankOut	whether to replace removed variables with underscores
+	 * @return			a <code>List</code> containing the equation pieces
 	 */
-	public List<String> getSplitPartialEquation(boolean format, boolean blankOut) {
-		String eq = format ? formatEquation(partialEquation) : partialEquation;
+	public List<String> getSplitPartialEquation(boolean blankOut) {
+		String eq = partialEquation;
 		Pattern p = Pattern.compile("[a-zA-Z]+");
 		Matcher m = p.matcher(eq);
 		List<String> equationParts = new ArrayList<>();
@@ -175,12 +233,7 @@ public class MathFunction {
 		return equationParts;
 	}	
 	
-	/**
-	 * 
-	 * @param name
-	 * @return
-	 */
-	public boolean hasVariable(String name) {
+	private boolean hasVariable(String name) {
 		return variables.containsKey(name);
 	}
 	
@@ -188,23 +241,6 @@ public class MathFunction {
 		if (!name.equals(independentVariable) && !hasVariable(name)) {
 			variables.put(name, value);
 		}
-	}
-	
-	// TODO: getFormattedEquation
-	private String formatEquation(String equation) {
-		// possible components:
-		// regex
-		// Unicode for superscripts
-		
-		// remove "*"
-		
-		// exponential:
-		// keep "^"
-		
-		// everything else:
-		// convert "^" and raised stuff to unicode superscript
-		
-		return equation;
 	}
 	
 	private String clean(String exp) {
@@ -239,7 +275,6 @@ public class MathFunction {
 		
 		switch (this.type) {
 		case QUADRATIC_FACTORED_FORM:	// f(x) = a(x - s)(x - r)
-			// TODO: add coefficients for x
 			// a
 			do {
 				var = RandomNumberUtil.randInt(min, max);
@@ -326,7 +361,6 @@ public class MathFunction {
 		
 		switch (this.type) {
 		case QUADRATIC_FACTORED_FORM:	// f(x) = a(x - s)(x - r)
-			// TODO: add coefficients for x
 			// a
 			var = variables.get("a");
 			if (var == 1) {
@@ -411,9 +445,6 @@ public class MathFunction {
 		for (String var : visibleVariables) {
 			equation = equation.replaceAll(var, Integer.toString(variables.get(var)));
 		}
-		
-		// TODO: create variables to represent the coefficients, maybe inside MathFunctionType
-		// TODO: to reduce repetitive code, see if a common behaviour can be defined for plugging in different types of variables
 
 		equation = clean(equation);
 	}
@@ -426,7 +457,6 @@ public class MathFunction {
 		
 		partialEquation = baseEquation;		
 		
-		// plug in
 		for (String var : intactVariables) {
 			val = variables.get(var);
 			partialEquation = partialEquation.replaceAll(var, Integer.toString(val));
@@ -443,9 +473,9 @@ public class MathFunction {
 		
 		while (true) {
 			func = new MathFunction(funcTypes[i], -10, 10);
-			System.out.println(func.getEquation(false));
-			System.out.println(func.getPartialEquation(false, false));
-			System.out.println(func.getPartialEquation(false, true));
+			System.out.println(func.getEquation());
+			System.out.println(func.getPartialEquation(false));
+			System.out.println(func.getPartialEquation(true));
 
 			i = ++i % funcTypes.length;
 			s.nextLine();
