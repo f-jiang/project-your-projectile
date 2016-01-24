@@ -12,7 +12,7 @@
 	-fx-min-width: 7em;
 	-fx-min-height: 7em;
 	-fx-border-radius: 50%;
-	-fx-font-size: 1em;
+	-fx-font-size: 85%;
 	-fx-background-color: #F4F4F4;
 	-fx-border-color: #F3622D;
 	-fx-border-width: 0.25em;
@@ -24,7 +24,7 @@
 
 .round-button:pressed {
 	-fx-background-color: #FFFFFF;
-	-fx-font-size: 0.9em;
+	-fx-font-size: 75%;
 }
 
 .fill-in-the-blanks {
