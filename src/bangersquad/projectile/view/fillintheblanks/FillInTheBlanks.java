@@ -77,8 +77,16 @@ public class FillInTheBlanks extends AnchorPane {
 		applyPrompts();
 	}
 	
+	/**
+	 * 
+	 * Set an event filter to process <code>TextField</code> input. The event filter can be used for collecting data and 
+	 * restricting/validating input. The event filter is added to every <code>TextField</code> in this <code>FillInTheBlanks</code>.
+	 * 
+	 * @param filter	the event filter to use for this <code>FillInTheBlanks</code>'s <code>TextField</code>s
+	 */
 	public void setInputFilter(EventHandler<KeyEvent> filter) {
 		inputFilter = filter;
+		applyInputFilter();
 	}
 	
 	/**
