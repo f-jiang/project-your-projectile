@@ -8,10 +8,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
@@ -29,6 +31,10 @@ public class FillInTheBlanks extends AnchorPane {
 	
 	private String[] prompts = new String[0];
 
+	private int maxInputLength = 3;
+	
+	private EventHandler<KeyEvent> inputFilter;
+	
 	/**
 	 * Initializes a new <code>FillInTheBlanks</code>. This object consists of a text string with <code>TextField</code>s
 	 * inserted in place of the blanks.
@@ -46,6 +52,14 @@ public class FillInTheBlanks extends AnchorPane {
         }
 	}
         
+	public int getMaxInputLength() {
+		return maxInputLength;
+	}
+	
+	public void setMaxInputLength(int maxInputLength) {
+		this.maxInputLength = maxInputLength;
+	}
+	
 	/**
 	 * Specifies a text prompt to be displayed in this object's <code>TextField</code>s. 
 	 * The prompts are applied in the order in which they are provided.
@@ -61,6 +75,10 @@ public class FillInTheBlanks extends AnchorPane {
 	public void setPrompts(String... prompts) {
 		this.prompts = prompts;
 		applyPrompts();
+	}
+	
+	public void setInputFilter(EventHandler<KeyEvent> filter) {
+		inputFilter = filter;
 	}
 	
 	/**
@@ -83,8 +101,6 @@ public class FillInTheBlanks extends AnchorPane {
 			if (piece.matches(blankRegex)) {	// this is a blank
 				blankText = new TextField();
 				blankText.setPrefWidth(50);	// TODO: calculate TextField width based on font size, max input len
-				// input validation: ints only
-				// restrict length of input
 				children.add(blankText);				
 			} else {
 				nonBlankText = new Text(piece);
@@ -92,6 +108,7 @@ public class FillInTheBlanks extends AnchorPane {
 			}
 		}		
 		
+		applyInputFilter();
 		applyPrompts();
 	}
 
@@ -115,8 +132,6 @@ public class FillInTheBlanks extends AnchorPane {
 			if (piece.matches(blankRegex)) {	// this is a blank
 				blankText = new TextField();
 				blankText.setPrefWidth(50);	// TODO: calculate TextField width based on font size, max input len
-				// input validation: ints only
-				// restrict length of input
 				children.add(blankText);				
 			} else {
 				nonBlankText = new Text(piece);
@@ -124,6 +139,7 @@ public class FillInTheBlanks extends AnchorPane {
 			}
 		}
 		
+		applyInputFilter();
 		applyPrompts();
 	}
 
@@ -155,8 +171,6 @@ public class FillInTheBlanks extends AnchorPane {
 			if (piece.matches("")) {	// this is a blank
 				blankText = new TextField();
 				blankText.setPrefWidth(50);	// TODO: calculate TextField width based on font size, max input len
-				// input validation: ints only
-				// restrict length of input
 				children.add(blankText);				
 			} else {
 				nonBlankText = new Text(piece);
@@ -164,6 +178,7 @@ public class FillInTheBlanks extends AnchorPane {
 			}
 		}
 		
+		applyInputFilter();
 		applyPrompts();
 	}
 
@@ -187,6 +202,14 @@ public class FillInTheBlanks extends AnchorPane {
 		return sb.toString();
 	}
 
+	private void applyInputFilter() {
+		for (Node child : textFlow.getChildren()) {
+			if (child instanceof TextField) {
+				((TextField) child).addEventFilter(KeyEvent.KEY_TYPED, inputFilter); 
+			}
+		}				
+	}
+	
 	private void applyPrompts() {
 		int i = 0;
 		int l = prompts.length;
@@ -201,5 +224,5 @@ public class FillInTheBlanks extends AnchorPane {
 			}
 		}
 	}
-
+	
 }

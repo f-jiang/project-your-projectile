@@ -7,14 +7,18 @@ import bangersquad.projectile.MainApp;
 import bangersquad.projectile.ScreenManager;
 import bangersquad.projectile.model.MathFunction;
 import bangersquad.projectile.util.SeriesUtil;
+import bangersquad.projectile.util.RandomNumberUtil;
 import bangersquad.projectile.view.ControlledScreen;
 import bangersquad.projectile.view.fillintheblanks.FillInTheBlanks;
 import javafx.animation.AnimationTimer;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.chart.NumberAxis;
 
@@ -34,6 +38,7 @@ public class GameplayScreenController implements ControlledScreen {
 	private NumberAxis yAxis;
 	
 	private MathFunction currentFunction;
+	private int i = 0; //test
 	
 	@FXML
 	private BorderPane borderPane;
@@ -70,7 +75,37 @@ public class GameplayScreenController implements ControlledScreen {
 		chart.setLegendVisible(false);
 		
 		borderPane.setCenter(chart);
+		
+		userInput.setInputFilter((KeyEvent e) -> {
+			TextField source = (TextField) e.getSource();
+			
+			if (source.getText().length() >= 4 || !e.getCharacter().matches("\\d")) {
+				e.consume();
+			} 
+		});
 	}
+
+	@FXML
+	private void test() {
+		int startX = -10;
+		int endX = 10;
+		
+		double targetX = RandomNumberUtil.randInt(-10, 10);
+		double targetY = RandomNumberUtil.randInt(-10, 10);
+		double targetSize = RandomNumberUtil.randInt(-10, 10);
+		i = i++ % MathFunction.Type.values().length;
+		
+		positionTarget(targetX, targetY, targetSize, Math.random() > 0.5 ? TargetOrientation.HORIZONTAL : TargetOrientation.VERTICAL);
+
+		if (currentFunction != null) {
+			removeFunction(currentFunction);
+		}
+		currentFunction = new MathFunction(MathFunction.Type.values()[i], startX, endX);
+		plotFunction(currentFunction, (double) startX, (double) endX, 0.1);
+		
+		userInput.update(currentFunction.getSplitPartialEquation(true), "_");
+		userInput.setPrompts(currentFunction.getBlankVariables());
+	}	
 	
 	private void plotFunction(MathFunction function, Double startX, Double endX, Double increment) {
 		String equation = function.getEquation();
@@ -81,7 +116,6 @@ public class GameplayScreenController implements ControlledScreen {
 			@Override
 			public void handle(long now) {
 				if (dataPoints.isEmpty()) {
-					System.out.println("done");
 					stop();
 				} else {
 					XYChart.Data<Double, Double> dataPoint = dataPoints.remove(0);
