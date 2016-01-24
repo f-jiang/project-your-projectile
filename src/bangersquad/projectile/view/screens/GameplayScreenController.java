@@ -93,7 +93,7 @@ public class GameplayScreenController implements ControlledScreen {
 		double targetX = RandomNumberUtil.randInt(-10, 10);
 		double targetY = RandomNumberUtil.randInt(-10, 10);
 		double targetSize = RandomNumberUtil.randInt(-10, 10);
-		i = i++ % MathFunction.Type.values().length;
+		i = ++i % MathFunction.Type.values().length;
 		
 		positionTarget(targetX, targetY, targetSize, Math.random() > 0.5 ? TargetOrientation.HORIZONTAL : TargetOrientation.VERTICAL);
 
