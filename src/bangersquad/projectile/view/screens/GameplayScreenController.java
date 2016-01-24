@@ -3,22 +3,18 @@
  */
 package bangersquad.projectile.view.screens;
 
-import java.util.List;
-
 import bangersquad.projectile.MainApp;
 import bangersquad.projectile.ScreenManager;
 import bangersquad.projectile.model.MathFunction;
-import bangersquad.projectile.util.RandomNumberUtil;
 import bangersquad.projectile.util.SeriesUtil;
-import bangersquad.projectile.util.calculator.Calculator;
 import bangersquad.projectile.view.ControlledScreen;
 import bangersquad.projectile.view.fillintheblanks.FillInTheBlanks;
+import javafx.animation.AnimationTimer;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.chart.NumberAxis;
 
@@ -36,6 +32,8 @@ public class GameplayScreenController implements ControlledScreen {
 	private LineChart<Double, Double> chart;
 	private NumberAxis xAxis;
 	private NumberAxis yAxis;
+	
+	private MathFunction currentFunction;
 	
 	@FXML
 	private BorderPane borderPane;
@@ -74,11 +72,27 @@ public class GameplayScreenController implements ControlledScreen {
 		borderPane.setCenter(chart);
 	}
 	
-	private void plotFunction(MathFunction function, Double startX, Double endX) {	// TODO: add a left to right animation for this
-		// TODO: add a left to right animation for this
+	private void plotFunction(MathFunction function, Double startX, Double endX, Double increment) {
 		String equation = function.getEquation(false);
-		XYChart.Series<Double, Double> series = SeriesUtil.getFunctionSeries(function, equation, startX, endX); 
-		chart.getData().add(series);
+		ObservableList<XYChart.Data<Double, Double>> dataPoints = 
+			SeriesUtil.getFunctionSeries(function, equation, startX, endX, increment).getData();
+		XYChart.Series<Double, Double> plottedSeries = new XYChart.Series<>();
+		AnimationTimer plotAnimation = new AnimationTimer() {			
+			@Override
+			public void handle(long now) {
+				if (dataPoints.isEmpty()) {
+					System.out.println("done");
+					stop();
+				} else {
+					XYChart.Data<Double, Double> dataPoint = dataPoints.remove(0);
+					plottedSeries.getData().add(dataPoint);
+				}
+			}
+		};
+		
+		plottedSeries.setName(function.getEquation(false));
+		chart.getData().add(plottedSeries);
+		plotAnimation.start();
 	}
 	
 	private void removeFunction(MathFunction function) {		
