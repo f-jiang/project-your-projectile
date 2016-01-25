@@ -14,6 +14,7 @@ import javafx.animation.AnimationTimer;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.Point2D;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.ProgressBar;
@@ -32,6 +33,7 @@ public class GameplayScreenController implements ControlledScreen {
 	
 	private ScreenManager screenManager;
 	private XYChart.Series<Double, Double> target;
+	private Point2D bullseye;
 	
 	private LineChart<Double, Double> chart;
 	private NumberAxis xAxis;
@@ -156,12 +158,15 @@ public class GameplayScreenController implements ControlledScreen {
 		switch (orientation) {
 		case VERTICAL:
 			target.getData().add(new XYChart.Data<>(x, y + size));
+			bullseye = new Point2D(x, y + size / 2);
 			break;
 		case HORIZONTAL:
 			target.getData().add(new XYChart.Data<>(x + size, y));
+			bullseye = new Point2D(x + size / 2, y);
 			break;
 		default:
 			target.getData().add(new XYChart.Data<>(x, y));
+			bullseye = new Point2D(x, y);
 			break;
 		}
 		
