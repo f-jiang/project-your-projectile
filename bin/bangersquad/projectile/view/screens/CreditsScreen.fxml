@@ -9,14 +9,14 @@
 
 <AnchorPane prefHeight="500.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bangersquad.projectile.view.screens.CreditsScreenController">
    <children>
-      <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#goToMain" text="Back" />
-      <ImageView fitHeight="328.0" fitWidth="338.0" layoutX="79.0" layoutY="89.0" pickOnBounds="true" preserveRatio="true">
+      <Button layoutX="14.0" layoutY="460.0" mnemonicParsing="false" onAction="#goToMain" text="Back" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" />
+      <ImageView fitHeight="328.0" fitWidth="338.0" layoutX="79.0" layoutY="61.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../../../../../resources/logo.png" />
          </image></ImageView>
-      <Text layoutX="37.0" layoutY="404.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Banger Squad consists of 4 senior highschool students attending" />
-      <Text layoutX="37.0" layoutY="425.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Longfields-Davidson Heights Secondary School. Its members are" />
-      <Text layoutX="37.0" layoutY="446.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Feilan Jiang, Ashfaqul Haque, Sameed Mohammed and Mahmoud" />
-      <Text layoutX="37.0" layoutY="467.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Bayaa. Project Your Projectile is their first application." />
+      <Text layoutX="37.0" layoutY="351.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Banger Squad consists of 4 senior highschool students attending" />
+      <Text layoutX="37.0" layoutY="372.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Longfields-Davidson Heights Secondary School. Its members are" />
+      <Text layoutX="37.0" layoutY="393.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Feilan Jiang, Ashfaqul Haque, Sameed Mohammed and Mahmoud" />
+      <Text layoutX="37.0" layoutY="414.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Bayaa. Project Your Projectile is their first application." />
    </children>
 </AnchorPane>
