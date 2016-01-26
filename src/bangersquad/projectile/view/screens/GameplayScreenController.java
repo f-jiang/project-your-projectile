@@ -3,6 +3,8 @@
  */
 package bangersquad.projectile.view.screens;
 
+import java.util.Arrays;
+
 import bangersquad.projectile.MainApp;
 import bangersquad.projectile.ScreenManager;
 import bangersquad.projectile.model.MathFunction;
@@ -105,9 +107,12 @@ public class GameplayScreenController implements ControlledScreen {
 		currentFunction = new MathFunction(MathFunction.Type.values()[i], startX, endX);
 		plotFunction(currentFunction, (double) startX, (double) endX, 0.1);
 		
-		userInput.update(currentFunction.getSplitPartialEquation(true), "_");
+		System.out.println(Arrays.toString(userInput.getBlankText()));
+		System.out.println(userInput.getBlankText().length);
+		
+		userInput.update(currentFunction.getPartialEquation(true), "_");
 		userInput.setPrompts(currentFunction.getBlankVariables());
-	}	
+	}
 	
 	private void plotFunction(MathFunction function, Double startX, Double endX, Double increment) {
 		String equation = function.getEquation();
@@ -144,7 +149,7 @@ public class GameplayScreenController implements ControlledScreen {
 		chart.getData().clear();
 	}
 	
-	private void positionTarget(Double x, Double y, Double size, TargetOrientation orientation) {
+	private void positionTarget(Double x, Double y, Double radius, TargetOrientation orientation) {
 		ObservableList<XYChart.Series<Double, Double>> items = chart.getData();
 		
 		if (items.contains(target)) {
@@ -153,22 +158,22 @@ public class GameplayScreenController implements ControlledScreen {
 		
 		target = new XYChart.Series<Double, Double>();
 		target.setName("Target");
-		target.getData().add(new XYChart.Data<>(x, y));
 		
 		switch (orientation) {
 		case VERTICAL:
-			target.getData().add(new XYChart.Data<>(x, y + size));
-			bullseye = new Point2D(x, y + size / 2);
+			target.getData().add(new XYChart.Data<>(x, y - radius));
+			target.getData().add(new XYChart.Data<>(x, y + radius));
 			break;
 		case HORIZONTAL:
-			target.getData().add(new XYChart.Data<>(x + size, y));
-			bullseye = new Point2D(x + size / 2, y);
+			target.getData().add(new XYChart.Data<>(x - radius, y));
+			target.getData().add(new XYChart.Data<>(x + radius, y));
 			break;
 		default:
 			target.getData().add(new XYChart.Data<>(x, y));
-			bullseye = new Point2D(x, y);
 			break;
 		}
+		
+		bullseye = new Point2D(x, y);
 		
 		items.add(target);
 	}

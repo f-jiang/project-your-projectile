@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 import bangersquad.projectile.util.RandomNumberUtil;
+import bangersquad.projectile.util.calculator.Calculator;
 
 
 /**
@@ -26,18 +27,20 @@ import bangersquad.projectile.util.RandomNumberUtil;
 public class MathFunction {
 	
 	public enum Type {
-		QUADRATIC_STANDARD_FORM("a*_^2 + b*_ + c"),
-		QUADRATIC_FACTORED_FORM("a*(_ - s)*(_ - r)"),
-		QUADRATIC_VERTEX_FORM("a*(_ - h)^2 + k");
+		QUADRATIC_STANDARD_FORM("a*_^2 + b*_ + c", "a", "b", "c"),
+		QUADRATIC_FACTORED_FORM("a*(_ - s)*(_ - r)", "a", "s", "r"),
+		QUADRATIC_VERTEX_FORM("a*(_ - h)^2 + k", "a", "h", "k");
 		
 		private final String baseEquation;
+		private final String[] variables;
 		
 		/**
 		 * 
 		 * @param eq
 		 */
-		Type(String eq) {
+		Type(String eq, String... vars) {
 			baseEquation = eq;
+			variables = vars;
 		}
 		
 		/**
@@ -57,6 +60,10 @@ public class MathFunction {
 		 */
 		public String getBaseEquation(String independentVariable) {
 			return baseEquation.replaceAll("_", independentVariable); 
+		}
+		
+		public String[] getVariableNames() {
+			return variables;
 		}
 		
 	}	
@@ -103,6 +110,29 @@ public class MathFunction {
 		
 		determineBlankVariables();
 		updatePartialEquation();
+	}
+	
+	public MathFunction(String equation) {
+		this.equation = equation;
+	}
+	
+	/**
+	 * 
+	 * Returns the <code>MathFunction</code>'s y-value at the given x-value. If no y-value exists, this function returns
+	 * <code>Double.NaN</code>.
+	 * 
+	 * @param x	the x-value
+	 * @return	the y-value, or Double.NaN if y is undefined
+	 */
+	public double getValue(double x) {
+		String expression = Calculator.plugIn(equation, x);
+		String result = Calculator.eval(expression, false);
+		
+		if (result == null) {
+			return Double.NaN;
+		} else {
+			return Double.parseDouble(result);
+		}
 	}
 	
 	/**

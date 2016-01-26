@@ -32,7 +32,9 @@ public class FillInTheBlanks extends AnchorPane {
 	private String[] prompts = new String[0];
 
 	private int maxInputLength = 3;
+	private int numBlanks = 0;
 	
+
 	private EventHandler<KeyEvent> inputFilter;
 	
 	/**
@@ -58,6 +60,10 @@ public class FillInTheBlanks extends AnchorPane {
 	
 	public void setMaxInputLength(int maxInputLength) {
 		this.maxInputLength = maxInputLength;
+	}
+
+	public int getNumBlanks() {
+		return numBlanks;
 	}
 	
 	/**
@@ -104,12 +110,14 @@ public class FillInTheBlanks extends AnchorPane {
 		ObservableList<Node> children = textFlow.getChildren();
 		
 		children.clear();
+		numBlanks = 0;
 
 		for (String piece : textPieces) {
 			if (piece.matches(blankRegex)) {	// this is a blank
 				blankText = new TextField();
 				blankText.setPrefWidth(50);	// TODO: calculate TextField width based on font size, max input len
-				children.add(blankText);				
+				children.add(blankText);		
+				numBlanks++;
 			} else {
 				nonBlankText = new Text(piece);
 				children.add(nonBlankText);
@@ -135,12 +143,14 @@ public class FillInTheBlanks extends AnchorPane {
 		ObservableList<Node> children = textFlow.getChildren();
 		
 		children.clear();
+		numBlanks = 0;
 
 		for (String piece : textPieces) {
 			if (piece.matches(blankRegex)) {	// this is a blank
 				blankText = new TextField();
 				blankText.setPrefWidth(50);	// TODO: calculate TextField width based on font size, max input len
-				children.add(blankText);				
+				children.add(blankText);
+				numBlanks++;
 			} else {
 				nonBlankText = new Text(piece);
 				children.add(nonBlankText);
@@ -164,7 +174,8 @@ public class FillInTheBlanks extends AnchorPane {
 		ObservableList<Node> children = textFlow.getChildren();
 		
 		children.clear();
-
+		numBlanks = 0;
+		
 		for (int i = 0; i < textPieces.size() - 1; i++) {	
 			if (textPieces.get(i).matches("")) {
 				continue;
@@ -180,6 +191,7 @@ public class FillInTheBlanks extends AnchorPane {
 				blankText = new TextField();
 				blankText.setPrefWidth(50);	// TODO: calculate TextField width based on font size, max input len
 				children.add(blankText);				
+				numBlanks++;
 			} else {
 				nonBlankText = new Text(piece);
 				children.add(nonBlankText);
@@ -210,6 +222,19 @@ public class FillInTheBlanks extends AnchorPane {
 		return sb.toString();
 	}
 
+	public String[] getBlankText() {
+		String[] blanks = new String[numBlanks];
+		int i = 0;
+		
+		for (Node child : textFlow.getChildren()) {
+			if (child instanceof TextField) {
+				blanks[i++] = (((TextField) child).getText());
+			}
+		}
+
+		return blanks;		
+	}
+	
 	private void applyInputFilter() {
 		for (Node child : textFlow.getChildren()) {
 			if (child instanceof TextField) {
