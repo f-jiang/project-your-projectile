@@ -32,15 +32,15 @@ public class MathFunction {
 		QUADRATIC_VERTEX_FORM("a*(_ - h)^2 + k", "a", "h", "k");
 		
 		private final String baseEquation;
-		private final String[] variables;
+		private final String[] variableNames;
 		
 		/**
 		 * 
-		 * @param eq
+		 * @param eqn
 		 */
-		Type(String eq, String... vars) {
-			baseEquation = eq;
-			variables = vars;
+		Type(String eqn, String... varNames) {
+			baseEquation = eqn;
+			variableNames = varNames;
 		}
 		
 		/**
@@ -63,7 +63,7 @@ public class MathFunction {
 		}
 		
 		public String[] getVariableNames() {
-			return variables;
+			return variableNames;
 		}
 		
 	}	
@@ -112,6 +112,26 @@ public class MathFunction {
 		updatePartialEquation();
 	}
 	
+	public MathFunction(Type type, int... variables) {
+		if (variables.length < type.getVariableNames().length) {
+			throw new IllegalArgumentException("Not enough variable values for equation " + type.getBaseEquation(independentVariable));
+		}
+		
+		this.type = type;		
+		int i = 0;
+		
+		for (String name : type.getVariableNames()) {
+			registerVariable(name, variables[i++]);
+		}
+		
+		updateBaseEquation();
+		
+		updateEquation();
+		
+		determineBlankVariables();
+		updatePartialEquation();
+	}
+	
 	public MathFunction(String equation) {
 		this.equation = equation;
 	}
@@ -128,7 +148,7 @@ public class MathFunction {
 		String expression = Calculator.plugIn(equation, x);
 		String result = Calculator.eval(expression, false);
 		
-		if (result == null) {
+		if (result.equals(null)) {
 			return Double.NaN;
 		} else {
 			return Double.parseDouble(result);
