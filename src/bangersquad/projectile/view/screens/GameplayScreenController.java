@@ -104,11 +104,12 @@ public class GameplayScreenController implements ControlledScreen {
 		if (currentFunction != null) {
 			removeFunction(currentFunction);
 		}
+
 		currentFunction = new MathFunction(MathFunction.Type.values()[i], startX, endX);
 		plotFunction(currentFunction, (double) startX, (double) endX, 0.1);
-		
-		System.out.println(Arrays.toString(userInput.getBlankText()));
-		System.out.println(userInput.getBlankText().length);
+
+		System.out.println(currentFunction.getEquation());
+		System.out.println(currentFunction.getPartialEquation(true));
 		
 		userInput.update(currentFunction.getPartialEquation(true), "_");
 		userInput.setPrompts(currentFunction.getBlankVariables());

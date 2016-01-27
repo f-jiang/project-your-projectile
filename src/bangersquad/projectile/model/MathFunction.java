@@ -27,19 +27,23 @@ import bangersquad.projectile.util.calculator.Calculator;
 public class MathFunction {
 	
 	public enum Type {
-		QUADRATIC_STANDARD_FORM("a*_^2 + b*_ + c", "a", "b", "c"),
-		QUADRATIC_FACTORED_FORM("a*(_ - s)*(_ - r)", "a", "s", "r"),
-		QUADRATIC_VERTEX_FORM("a*(_ - h)^2 + k", "a", "h", "k");
+		QUADRATIC_STANDARD_FORM("a*_^2 + b*_ + c", true, "a", "b", "c"),
+		QUADRATIC_FACTORED_FORM("a*(_ - s)*(_ - r)", true, "a", "s", "r"),
+		QUADRATIC_VERTEX_FORM("a*(_ - h)^2 + k", true, "a", "h", "k");
+		
 		
 		private final String baseEquation;
 		private final String[] variableNames;
+		
+		private boolean isEnabled;
 		
 		/**
 		 * 
 		 * @param eqn
 		 */
-		Type(String eqn, String... varNames) {
+		Type(String eqn, boolean enabled, String... varNames) {
 			baseEquation = eqn;
+			isEnabled = enabled;
 			variableNames = varNames;
 		}
 		
@@ -65,13 +69,33 @@ public class MathFunction {
 		public String[] getVariableNames() {
 			return variableNames;
 		}
+
+		public boolean isEnabled() {
+			return isEnabled;
+		}
+
+		public void setEnabled(boolean isEnabled) {
+			this.isEnabled = isEnabled;
+		}
+		
+		public List<MathFunction.Type> getEnabledValues() {
+			List<MathFunction.Type> enabledValues = new ArrayList<>();
+			
+			for (MathFunction.Type type : values()) {
+				if (type.isEnabled) {
+					enabledValues.add(type);
+				}
+			}
+			
+			return enabledValues;
+		}
 		
 	}	
 	
 	private Type type;
 	private Map<String, Integer> variables = new HashMap<>();
 	private Set<String> blankVariables = new LinkedHashSet<>();
-	private Set<String> visibleVariables = new HashSet<>();
+	private Set<String> visibleVariables = new LinkedHashSet<>();
 	private String baseEquation;
 	private String equation;
 	private String partialEquation;
