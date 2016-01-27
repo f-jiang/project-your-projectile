@@ -222,7 +222,7 @@ public class FillInTheBlanks extends AnchorPane {
 		return sb.toString();
 	}
 
-	public String[] getBlankText() {
+	public String[] getInputTexts() {
 		String[] blanks = new String[numBlanks];
 		int i = 0;
 		

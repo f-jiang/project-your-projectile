@@ -9,11 +9,14 @@ import bangersquad.projectile.ScreenManager;
  * @author feilan
  *
  */
-public interface ControlledScreen {
+public interface ScreenController {
 	
 	/**
 	 * 
-	 * @param controller
+	 * @param manager
 	 */
-	public void setScreenManager(ScreenManager controller);
+	public void setScreenManager(ScreenManager manager);
+	
+	public void onScreenSet();
+	
 }

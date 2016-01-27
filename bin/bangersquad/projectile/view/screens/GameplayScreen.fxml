@@ -24,8 +24,7 @@
                   </Button>
                   <FillInTheBlanks fx:id="userInput" prefHeight="26.0" HBox.hgrow="ALWAYS">
                   </FillInTheBlanks>
-                  <Button mnemonicParsing="false" onAction="#test" text="Test" />
-                  <Button mnemonicParsing="false" text="Launch">
+                  <Button fx:id="launchBtn" mnemonicParsing="false" onAction="#launch" text="Launch">
                      <HBox.margin>
                         <Insets bottom="10.0" right="10.0" />
                      </HBox.margin>

@@ -3,6 +3,7 @@
  */
 package bangersquad.projectile.view.screens;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import bangersquad.projectile.MainApp;
@@ -10,26 +11,30 @@ import bangersquad.projectile.ScreenManager;
 import bangersquad.projectile.model.MathFunction;
 import bangersquad.projectile.util.SeriesUtil;
 import bangersquad.projectile.util.RandomNumberUtil;
-import bangersquad.projectile.view.ControlledScreen;
+import bangersquad.projectile.view.ScreenController;
 import bangersquad.projectile.view.fillintheblanks.FillInTheBlanks;
 import javafx.animation.AnimationTimer;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.util.Duration;
 import javafx.scene.chart.NumberAxis;
 
 /**
  * @author feilan
  *
  */
-public class GameplayScreenController implements ControlledScreen {
+public class GameplayScreenController implements ScreenController {
 
 	private enum TargetOrientation { VERTICAL, HORIZONTAL }
 	
@@ -42,7 +47,8 @@ public class GameplayScreenController implements ControlledScreen {
 	private NumberAxis yAxis;
 	
 	private MathFunction currentFunction;
-	private int i = 0; //test
+	
+	private double targetSize = RandomNumberUtil.randInt(-10, 10);
 	
 	@FXML
 	private BorderPane borderPane;
@@ -52,9 +58,16 @@ public class GameplayScreenController implements ControlledScreen {
 	
 	@FXML
 	private ProgressBar progressBar;
+
+	@FXML
+	private Button launchBtn;
 	
 	public void setScreenManager(ScreenManager manager) {
 		screenManager = manager;
+	}
+	
+	public void onScreenSet() {
+		qStart();
 	}
 	
 	@FXML
@@ -65,6 +78,8 @@ public class GameplayScreenController implements ControlledScreen {
 	@SuppressWarnings("unchecked")
 	@FXML
 	private void initialize() {
+		progressBar.setProgress(0);
+		
 		xAxis = new NumberAxis("", -10, 10, 1);
 		xAxis.setAutoRanging(false);
 		xAxis.setAnimated(true);
@@ -82,37 +97,112 @@ public class GameplayScreenController implements ControlledScreen {
 		
 		userInput.setInputFilter((KeyEvent e) -> {
 			TextField source = (TextField) e.getSource();
+			String updatedText;
 			
-			if (source.getText().length() >= 4 || !e.getCharacter().matches("\\d")) {
+			if (e.getCharacter().matches("\\s")) {
+				updatedText = source.getText();
+			} else {
+				updatedText = source.getText().concat(e.getCharacter());
+			}
+			
+			System.out.println(updatedText);
+			
+			if (source.getText().length() >= 3 || !updatedText.matches("-*\\d+|-")) {
 				e.consume();
-			} 
-		});
+				launchBtn.setDisable(true);
+			} else if (updatedText.matches("-*\\d+")) {
+				boolean isReady = true;
+				boolean skipped = false;
+				
+				for (String text : userInput.getInputTexts()) {
+					if (text.equals(source.getText()) && !skipped) {
+						skipped = true;
+						continue;
+					} else if (!text.matches("-*\\d+")){
+						isReady = false;
+						break;
+					}
+				}
+				
+				launchBtn.setDisable(!isReady);
+			}
+		});		
 	}
 
-	@FXML
-	private void test() {
-		int startX = -10;
-		int endX = 10;
+	private void qStart(){
+		boolean startState = false;
+		boolean endState = false;
+		int startHold = 0;
+		int endHold = 0;
+		double targetMidX;
+		double targetMidY;
 		
-		double targetX = RandomNumberUtil.randInt(-10, 10);
-		double targetY = RandomNumberUtil.randInt(-10, 10);
-		double targetSize = RandomNumberUtil.randInt(-10, 10);
-		i = ++i % MathFunction.Type.values().length;
+		clearChart();
+		launchBtn.setDisable(true);
 		
-		positionTarget(targetX, targetY, targetSize, Math.random() > 0.5 ? TargetOrientation.HORIZONTAL : TargetOrientation.VERTICAL);
-
-		if (currentFunction != null) {
-			removeFunction(currentFunction);
-		}
-
-		currentFunction = new MathFunction(MathFunction.Type.values()[i], startX, endX);
-		plotFunction(currentFunction, (double) startX, (double) endX, 0.1);
-
-		System.out.println(currentFunction.getEquation());
-		System.out.println(currentFunction.getPartialEquation(true));
+		ArrayList<MathFunction.Type> enabledTypes = new ArrayList<>(MathFunction.Type.getEnabledValues());
+		int rand = RandomNumberUtil.randInt(0, enabledTypes.size() - 1);
+		
+		currentFunction = new MathFunction(enabledTypes.get(rand), -10, 10);
 		
 		userInput.update(currentFunction.getPartialEquation(true), "_");
 		userInput.setPrompts(currentFunction.getBlankVariables());
+		
+		double y;
+		for (int x = -9; x <= 9; x++){
+			y = currentFunction.getValue(x);
+			if (y >= -10 && y <= 10 && startState == false){
+				startState = true;
+				startHold = x;
+			}
+			if (y >= -10 && y <= 10 && endState == false){
+				endState = true;
+				endHold = x;
+			}
+		}
+		
+		targetMidX = RandomNumberUtil.randInt(startHold, endHold);
+		targetMidY = currentFunction.getValue(targetMidX);
+		targetSize = RandomNumberUtil.randInt(1, 3);
+		positionTarget(targetMidX, targetMidY, targetSize, TargetOrientation.VERTICAL);
+		
+		System.out.println(targetMidX);
+		System.out.println(targetMidY);
+		System.out.println(targetSize);
+		
+	}
+	
+	@FXML
+	private void launch() {
+		MathFunction userFunction = new MathFunction(userInput.getText());
+		double functionY = userFunction.getValue(bullseye.getX());;		
+		
+		
+		KeyFrame graph = new KeyFrame(Duration.ZERO, (ActionEvent e) -> { 
+			plotFunction(userFunction, -10.0, 10.0, 0.1);
+			launchBtn.setDisable(true);
+		});
+		
+		KeyFrame check = new KeyFrame(Duration.millis(5000.0), (ActionEvent e) -> {  
+			Point2D funcPoint = new Point2D(bullseye.getX(), functionY);
+			double dist = funcPoint.distance(bullseye);
+			
+			if (dist <= targetSize) {
+				double maxScore = 0.1;
+				double scoreIncrease = maxScore * (1 - (dist / targetSize));
+				
+				progressBar.setProgress(progressBar.getProgress() + scoreIncrease);
+			}
+
+			if (progressBar.getProgress() == 1.0){
+				goToMain();
+			} else {
+				qStart();
+			}
+		});
+		
+		Timeline line = new Timeline(graph, check);
+		line.play();
 	}
 	
 	private void plotFunction(MathFunction function, Double startX, Double endX, Double increment) {

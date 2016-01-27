@@ -78,7 +78,7 @@ public class MathFunction {
 			this.isEnabled = isEnabled;
 		}
 		
-		public List<MathFunction.Type> getEnabledValues() {
+		public static List<MathFunction.Type> getEnabledValues() {
 			List<MathFunction.Type> enabledValues = new ArrayList<>();
 			
 			for (MathFunction.Type type : values()) {

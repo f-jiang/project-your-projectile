@@ -17,7 +17,7 @@ import java.io.IOException;
 import javafx.util.Duration;
 import java.util.HashMap;
 
-import bangersquad.projectile.view.ControlledScreen;
+import bangersquad.projectile.view.ScreenController;
 
 /**
  * @author feilan
@@ -26,7 +26,10 @@ import bangersquad.projectile.view.ControlledScreen;
 public class ScreenManager extends StackPane {
 
 	private HashMap<String, Node> screens = new HashMap<>();
+	private HashMap<String, ScreenController> screenControllers = new HashMap<>();
 	private int FADE_DURATION = 250;
+	
+	private String current;
 	
 	/**
 	 * 
@@ -51,10 +54,11 @@ public class ScreenManager extends StackPane {
 			loader.setLocation(getClass().getResource(resource));
 			
 			Parent loadedScreen = (Parent) loader.load();
-			ControlledScreen loadedScreenController = (ControlledScreen) loader.getController(); 
+			ScreenController loadedScreenController = (ScreenController) loader.getController(); 
 			loadedScreenController.setScreenManager(this);
 			
 			addScreen(id, loadedScreen);
+			addController(id, loadedScreenController);
 			
 			screenLoaded = true;
 		} catch (IOException e) {
@@ -104,6 +108,10 @@ public class ScreenManager extends StackPane {
 			screenSet = true;
 		}
 		
+		if (screenSet) {
+			screenControllers.get(id).onScreenSet();
+		}
+		
 		return screenSet;
 	}
 	
@@ -115,6 +123,10 @@ public class ScreenManager extends StackPane {
 	public boolean unloadScreen(String id) {
 		// remove() returns null if screen with requested id was not found in screens
 		return screens.remove(id) != null;
+	}
+	
+	private void addController(String id, ScreenController controller) {
+		screenControllers.put(id, controller);
 	}
 	
 }

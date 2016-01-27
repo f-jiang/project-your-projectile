@@ -5,14 +5,14 @@ package bangersquad.projectile.view.screens;
 
 import bangersquad.projectile.MainApp;
 import bangersquad.projectile.ScreenManager;
-import bangersquad.projectile.view.ControlledScreen;
+import bangersquad.projectile.view.ScreenController;
 import javafx.fxml.FXML;
 
 /**
  * @author feilan
  *
  */
-public class CreditsScreenController implements ControlledScreen {
+public class CreditsScreenController implements ScreenController {
 
 	private ScreenManager screenManager;
 	
@@ -24,5 +24,8 @@ public class CreditsScreenController implements ControlledScreen {
 	private void goToMain() {
 		screenManager.setScreen(MainApp.MAIN_SCREEN);
 	}
+
+	@Override
+	public void onScreenSet() {	}
 	
 }
